@@ -265,7 +265,7 @@ void swap_numbers(int *x,int *y)
  800034e:	68fa      	ldr	r2, [r7, #12]
  8000350:	601a      	str	r2, [r3, #0]
      void (*jump_addr) (void);
-     jump_addr = (void*)0x20000009;
+     jump_addr = (void*)0x20000008;
      jump_addr();
 #endif
 
