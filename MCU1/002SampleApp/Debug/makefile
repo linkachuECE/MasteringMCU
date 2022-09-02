@@ -59,8 +59,8 @@ all: main-build
 main-build: 002SampleApp.elf secondary-outputs
 
 # Tool invocations
-002SampleApp.elf 002SampleApp.map: $(OBJS) $(USER_OBJS) C:\Users\egbra\Desktop\MasteringMCU\MCU1\002SampleApp\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "002SampleApp.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\002SampleApp\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="002SampleApp.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+002SampleApp.elf 002SampleApp.map: $(OBJS) $(USER_OBJS) C:\Users\ebraun\Desktop\MasteringMCU\MCU1\002SampleApp\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "002SampleApp.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ebraun\Desktop\MasteringMCU\MCU1\002SampleApp\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="002SampleApp.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

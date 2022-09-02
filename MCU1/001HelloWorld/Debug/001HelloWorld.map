@@ -1096,14 +1096,14 @@ LOAD c:/st/stm32cubeide_1.10.1/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_line    0x0000000000000d90      0x4e5 ./Src/sysmem.o
  .debug_line    0x0000000000001275       0x84 ./Startup/startup_stm32f407vgtx.o
 
-.debug_str      0x0000000000000000     0x9347
- .debug_str     0x0000000000000000     0x7a65 ./Src/main.o
-                                       0x7c52 (size before relaxing)
- .debug_str     0x0000000000007a65     0x184b ./Src/syscalls.o
+.debug_str      0x0000000000000000     0x930a
+ .debug_str     0x0000000000000000     0x7a66 ./Src/main.o
+                                       0x7c53 (size before relaxing)
+ .debug_str     0x0000000000007a66     0x180d ./Src/syscalls.o
                                        0x8ae3 (size before relaxing)
- .debug_str     0x00000000000092b0       0x66 ./Src/sysmem.o
+ .debug_str     0x0000000000009273       0x66 ./Src/sysmem.o
                                        0x5d71 (size before relaxing)
- .debug_str     0x0000000000009316       0x31 ./Startup/startup_stm32f407vgtx.o
+ .debug_str     0x00000000000092d9       0x31 ./Startup/startup_stm32f407vgtx.o
                                          0x6f (size before relaxing)
 
 .comment        0x0000000000000000       0x50

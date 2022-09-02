@@ -41,11 +41,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  18 .debug_line   000012f9  00000000  00000000  00023ad8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    00009347  00000000  00000000  00024dd1  2**0
+ 19 .debug_str    0000930a  00000000  00000000  00024dd1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  0002e118  2**0
+ 20 .comment      00000050  00000000  00000000  0002e0db  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00000b9c  00000000  00000000  0002e168  2**2
+ 21 .debug_frame  00000b9c  00000000  00000000  0002e12c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -168,30 +168,49 @@ int main(void)
  80002b8:	08001534 	.word	0x08001534
 
 080002bc <ITM_SendChar>:
+/* ITM register addresses */
+#define ITM_STIMULUS_PORT0   	*((volatile uint32_t*) 0xE0000000 )
+#define ITM_TRACE_EN          	*((volatile uint32_t*) 0xE0000E00 )
+
+void ITM_SendChar(uint8_t ch)
+{
  80002bc:	b480      	push	{r7}
  80002be:	b083      	sub	sp, #12
  80002c0:	af00      	add	r7, sp, #0
  80002c2:	4603      	mov	r3, r0
  80002c4:	71fb      	strb	r3, [r7, #7]
+
+	//Enable TRCENA
+	DEMCR |= ( 1 << 24);
  80002c6:	4b0e      	ldr	r3, [pc, #56]	; (8000300 <ITM_SendChar+0x44>)
  80002c8:	681b      	ldr	r3, [r3, #0]
  80002ca:	4a0d      	ldr	r2, [pc, #52]	; (8000300 <ITM_SendChar+0x44>)
  80002cc:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
  80002d0:	6013      	str	r3, [r2, #0]
+
+	//enable stimulus port 0
+	ITM_TRACE_EN |= ( 1 << 0);
  80002d2:	4b0c      	ldr	r3, [pc, #48]	; (8000304 <ITM_SendChar+0x48>)
  80002d4:	681b      	ldr	r3, [r3, #0]
  80002d6:	4a0b      	ldr	r2, [pc, #44]	; (8000304 <ITM_SendChar+0x48>)
  80002d8:	f043 0301 	orr.w	r3, r3, #1
  80002dc:	6013      	str	r3, [r2, #0]
+
+	// read FIFO status in bit [0]:
+	while(!(ITM_STIMULUS_PORT0 & 1));
  80002de:	bf00      	nop
  80002e0:	f04f 4360 	mov.w	r3, #3758096384	; 0xe0000000
  80002e4:	681b      	ldr	r3, [r3, #0]
  80002e6:	f003 0301 	and.w	r3, r3, #1
  80002ea:	2b00      	cmp	r3, #0
  80002ec:	d0f8      	beq.n	80002e0 <ITM_SendChar+0x24>
+
+	//Write to ITM stimulus port0
+	ITM_STIMULUS_PORT0 = ch;
  80002ee:	f04f 4260 	mov.w	r2, #3758096384	; 0xe0000000
  80002f2:	79fb      	ldrb	r3, [r7, #7]
  80002f4:	6013      	str	r3, [r2, #0]
+}
  80002f6:	bf00      	nop
  80002f8:	370c      	adds	r7, #12
  80002fa:	46bd      	mov	sp, r7
@@ -201,15 +220,26 @@ int main(void)
  8000304:	e0000e00 	.word	0xe0000e00
 
 08000308 <_read>:
+	_kill(status, -1);
+	while (1) {}		/* Make sure we hang here */
+}
+
+__attribute__((weak)) int _read(int file, char *ptr, int len)
+{
  8000308:	b580      	push	{r7, lr}
  800030a:	b086      	sub	sp, #24
  800030c:	af00      	add	r7, sp, #0
  800030e:	60f8      	str	r0, [r7, #12]
  8000310:	60b9      	str	r1, [r7, #8]
  8000312:	607a      	str	r2, [r7, #4]
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  8000314:	2300      	movs	r3, #0
  8000316:	617b      	str	r3, [r7, #20]
  8000318:	e00a      	b.n	8000330 <_read+0x28>
+	{
+		*ptr++ = __io_getchar();
  800031a:	f3af 8000 	nop.w
  800031e:	4601      	mov	r1, r0
  8000320:	68bb      	ldr	r3, [r7, #8]
@@ -217,6 +247,7 @@ int main(void)
  8000324:	60ba      	str	r2, [r7, #8]
  8000326:	b2ca      	uxtb	r2, r1
  8000328:	701a      	strb	r2, [r3, #0]
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  800032a:	697b      	ldr	r3, [r7, #20]
  800032c:	3301      	adds	r3, #1
  800032e:	617b      	str	r3, [r7, #20]
@@ -224,28 +255,42 @@ int main(void)
  8000332:	687b      	ldr	r3, [r7, #4]
  8000334:	429a      	cmp	r2, r3
  8000336:	dbf0      	blt.n	800031a <_read+0x12>
+	}
+
+return len;
  8000338:	687b      	ldr	r3, [r7, #4]
+}
  800033a:	4618      	mov	r0, r3
  800033c:	3718      	adds	r7, #24
  800033e:	46bd      	mov	sp, r7
  8000340:	bd80      	pop	{r7, pc}
 
 08000342 <_write>:
+
+__attribute__((weak)) int _write(int file, char *ptr, int len)
+{
  8000342:	b580      	push	{r7, lr}
  8000344:	b086      	sub	sp, #24
  8000346:	af00      	add	r7, sp, #0
  8000348:	60f8      	str	r0, [r7, #12]
  800034a:	60b9      	str	r1, [r7, #8]
  800034c:	607a      	str	r2, [r7, #4]
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  800034e:	2300      	movs	r3, #0
  8000350:	617b      	str	r3, [r7, #20]
  8000352:	e009      	b.n	8000368 <_write+0x26>
+	{
+		//__io_putchar(*ptr++);
+		ITM_SendChar(*ptr++);
  8000354:	68bb      	ldr	r3, [r7, #8]
  8000356:	1c5a      	adds	r2, r3, #1
  8000358:	60ba      	str	r2, [r7, #8]
  800035a:	781b      	ldrb	r3, [r3, #0]
  800035c:	4618      	mov	r0, r3
  800035e:	f7ff ffad 	bl	80002bc <ITM_SendChar>
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  8000362:	697b      	ldr	r3, [r7, #20]
  8000364:	3301      	adds	r3, #1
  8000366:	617b      	str	r3, [r7, #20]
@@ -253,18 +298,26 @@ int main(void)
  800036a:	687b      	ldr	r3, [r7, #4]
  800036c:	429a      	cmp	r2, r3
  800036e:	dbf1      	blt.n	8000354 <_write+0x12>
+	}
+	return len;
  8000370:	687b      	ldr	r3, [r7, #4]
+}
  8000372:	4618      	mov	r0, r3
  8000374:	3718      	adds	r7, #24
  8000376:	46bd      	mov	sp, r7
  8000378:	bd80      	pop	{r7, pc}
 
 0800037a <_close>:
+
+int _close(int file)
+{
  800037a:	b480      	push	{r7}
  800037c:	b083      	sub	sp, #12
  800037e:	af00      	add	r7, sp, #0
  8000380:	6078      	str	r0, [r7, #4]
+	return -1;
  8000382:	f04f 33ff 	mov.w	r3, #4294967295
+}
  8000386:	4618      	mov	r0, r3
  8000388:	370c      	adds	r7, #12
  800038a:	46bd      	mov	sp, r7
@@ -272,15 +325,22 @@ int main(void)
  800038e:	4770      	bx	lr
 
 08000390 <_fstat>:
+
+
+int _fstat(int file, struct stat *st)
+{
  8000390:	b480      	push	{r7}
  8000392:	b083      	sub	sp, #12
  8000394:	af00      	add	r7, sp, #0
  8000396:	6078      	str	r0, [r7, #4]
  8000398:	6039      	str	r1, [r7, #0]
+	st->st_mode = S_IFCHR;
  800039a:	683b      	ldr	r3, [r7, #0]
  800039c:	f44f 5200 	mov.w	r2, #8192	; 0x2000
  80003a0:	605a      	str	r2, [r3, #4]
+	return 0;
  80003a2:	2300      	movs	r3, #0
+}
  80003a4:	4618      	mov	r0, r3
  80003a6:	370c      	adds	r7, #12
  80003a8:	46bd      	mov	sp, r7
@@ -288,11 +348,16 @@ int main(void)
  80003ac:	4770      	bx	lr
 
 080003ae <_isatty>:
+
+int _isatty(int file)
+{
  80003ae:	b480      	push	{r7}
  80003b0:	b083      	sub	sp, #12
  80003b2:	af00      	add	r7, sp, #0
  80003b4:	6078      	str	r0, [r7, #4]
+	return 1;
  80003b6:	2301      	movs	r3, #1
+}
  80003b8:	4618      	mov	r0, r3
  80003ba:	370c      	adds	r7, #12
  80003bc:	46bd      	mov	sp, r7
@@ -300,13 +365,18 @@ int main(void)
  80003c0:	4770      	bx	lr
 
 080003c2 <_lseek>:
+
+int _lseek(int file, int ptr, int dir)
+{
  80003c2:	b480      	push	{r7}
  80003c4:	b085      	sub	sp, #20
  80003c6:	af00      	add	r7, sp, #0
  80003c8:	60f8      	str	r0, [r7, #12]
  80003ca:	60b9      	str	r1, [r7, #8]
  80003cc:	607a      	str	r2, [r7, #4]
+	return 0;
  80003ce:	2300      	movs	r3, #0
+}
  80003d0:	4618      	mov	r0, r3
  80003d2:	3714      	adds	r7, #20
  80003d4:	46bd      	mov	sp, r7
@@ -315,23 +385,44 @@ int main(void)
 	...
 
 080003dc <_sbrk>:
+ *
+ * @param incr Memory size
+ * @return Pointer to allocated memory
+ */
+void *_sbrk(ptrdiff_t incr)
+{
  80003dc:	b580      	push	{r7, lr}
  80003de:	b086      	sub	sp, #24
  80003e0:	af00      	add	r7, sp, #0
  80003e2:	6078      	str	r0, [r7, #4]
+  extern uint8_t _end; /* Symbol defined in the linker script */
+  extern uint8_t _estack; /* Symbol defined in the linker script */
+  extern uint32_t _Min_Stack_Size; /* Symbol defined in the linker script */
+  const uint32_t stack_limit = (uint32_t)&_estack - (uint32_t)&_Min_Stack_Size;
  80003e4:	4a14      	ldr	r2, [pc, #80]	; (8000438 <_sbrk+0x5c>)
  80003e6:	4b15      	ldr	r3, [pc, #84]	; (800043c <_sbrk+0x60>)
  80003e8:	1ad3      	subs	r3, r2, r3
  80003ea:	617b      	str	r3, [r7, #20]
+  const uint8_t *max_heap = (uint8_t *)stack_limit;
  80003ec:	697b      	ldr	r3, [r7, #20]
  80003ee:	613b      	str	r3, [r7, #16]
+  uint8_t *prev_heap_end;
+
+  /* Initialize heap end at first call */
+  if (NULL == __sbrk_heap_end)
  80003f0:	4b13      	ldr	r3, [pc, #76]	; (8000440 <_sbrk+0x64>)
  80003f2:	681b      	ldr	r3, [r3, #0]
  80003f4:	2b00      	cmp	r3, #0
  80003f6:	d102      	bne.n	80003fe <_sbrk+0x22>
+  {
+    __sbrk_heap_end = &_end;
  80003f8:	4b11      	ldr	r3, [pc, #68]	; (8000440 <_sbrk+0x64>)
  80003fa:	4a12      	ldr	r2, [pc, #72]	; (8000444 <_sbrk+0x68>)
  80003fc:	601a      	str	r2, [r3, #0]
+  }
+
+  /* Protect heap from growing into the reserved MSP stack */
+  if (__sbrk_heap_end + incr > max_heap)
  80003fe:	4b10      	ldr	r3, [pc, #64]	; (8000440 <_sbrk+0x64>)
  8000400:	681a      	ldr	r2, [r3, #0]
  8000402:	687b      	ldr	r3, [r7, #4]
@@ -339,22 +430,32 @@ int main(void)
  8000406:	693a      	ldr	r2, [r7, #16]
  8000408:	429a      	cmp	r2, r3
  800040a:	d207      	bcs.n	800041c <_sbrk+0x40>
+  {
+    errno = ENOMEM;
  800040c:	f000 f846 	bl	800049c <__errno>
  8000410:	4603      	mov	r3, r0
  8000412:	220c      	movs	r2, #12
  8000414:	601a      	str	r2, [r3, #0]
+    return (void *)-1;
  8000416:	f04f 33ff 	mov.w	r3, #4294967295
  800041a:	e009      	b.n	8000430 <_sbrk+0x54>
+  }
+
+  prev_heap_end = __sbrk_heap_end;
  800041c:	4b08      	ldr	r3, [pc, #32]	; (8000440 <_sbrk+0x64>)
  800041e:	681b      	ldr	r3, [r3, #0]
  8000420:	60fb      	str	r3, [r7, #12]
+  __sbrk_heap_end += incr;
  8000422:	4b07      	ldr	r3, [pc, #28]	; (8000440 <_sbrk+0x64>)
  8000424:	681a      	ldr	r2, [r3, #0]
  8000426:	687b      	ldr	r3, [r7, #4]
  8000428:	4413      	add	r3, r2
  800042a:	4a05      	ldr	r2, [pc, #20]	; (8000440 <_sbrk+0x64>)
  800042c:	6013      	str	r3, [r2, #0]
+
+  return (void *)prev_heap_end;
  800042e:	68fb      	ldr	r3, [r7, #12]
+}
  8000430:	4618      	mov	r0, r3
  8000432:	3718      	adds	r7, #24
  8000434:	46bd      	mov	sp, r7
@@ -365,49 +466,109 @@ int main(void)
  8000444:	20000098 	.word	0x20000098
 
 08000448 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
  8000448:	480d      	ldr	r0, [pc, #52]	; (8000480 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
  800044a:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
  800044c:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
  8000450:	480c      	ldr	r0, [pc, #48]	; (8000484 <LoopForever+0x6>)
+  ldr r1, =_edata
  8000452:	490d      	ldr	r1, [pc, #52]	; (8000488 <LoopForever+0xa>)
+  ldr r2, =_sidata
  8000454:	4a0d      	ldr	r2, [pc, #52]	; (800048c <LoopForever+0xe>)
+  movs r3, #0
  8000456:	2300      	movs	r3, #0
+  b LoopCopyDataInit
  8000458:	e002      	b.n	8000460 <LoopCopyDataInit>
 
 0800045a <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
  800045a:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
  800045c:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
  800045e:	3304      	adds	r3, #4
 
 08000460 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
  8000460:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
  8000462:	428c      	cmp	r4, r1
+  bcc CopyDataInit
  8000464:	d3f9      	bcc.n	800045a <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
  8000466:	4a0a      	ldr	r2, [pc, #40]	; (8000490 <LoopForever+0x12>)
+  ldr r4, =_ebss
  8000468:	4c0a      	ldr	r4, [pc, #40]	; (8000494 <LoopForever+0x16>)
+  movs r3, #0
  800046a:	2300      	movs	r3, #0
+  b LoopFillZerobss
  800046c:	e001      	b.n	8000472 <LoopFillZerobss>
 
 0800046e <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
  800046e:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
  8000470:	3204      	adds	r2, #4
 
 08000472 <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
  8000472:	42a2      	cmp	r2, r4
+  bcc FillZerobss
  8000474:	d3fb      	bcc.n	800046e <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
  8000476:	f000 f817 	bl	80004a8 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
  800047a:	f7ff ff09 	bl	8000290 <main>
 
 0800047e <LoopForever>:
+
+LoopForever:
+    b LoopForever
  800047e:	e7fe      	b.n	800047e <LoopForever>
+  ldr   r0, =_estack
  8000480:	20020000 	.word	0x20020000
+  ldr r0, =_sdata
  8000484:	20000000 	.word	0x20000000
+  ldr r1, =_edata
  8000488:	20000064 	.word	0x20000064
+  ldr r2, =_sidata
  800048c:	080015ec 	.word	0x080015ec
+  ldr r2, =_sbss
  8000490:	20000064 	.word	0x20000064
+  ldr r4, =_ebss
  8000494:	20000094 	.word	0x20000094
 
 08000498 <ADC_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
  8000498:	e7fe      	b.n	8000498 <ADC_IRQHandler>
 	...
 
