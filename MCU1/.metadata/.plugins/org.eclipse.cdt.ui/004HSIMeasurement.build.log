@@ -1,16 +1,10 @@
-17:46:39 **** Build of configuration Debug for project 004HSIMeasurement ****
-make -j4 all 
-arm-none-eabi-gcc -o "004HSIMeasurement.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ebraun\Desktop\MasteringMCU\MCU1\004HSIMeasurement\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="004HSIMeasurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: 004HSIMeasurement.elf
- 
+19:50:22 **** Incremental Build of configuration Debug for project 004HSIMeasurement ****
+make -j16 all 
 arm-none-eabi-size   004HSIMeasurement.elf 
-arm-none-eabi-objdump -h -S  004HSIMeasurement.elf  > "004HSIMeasurement.list"
    text	   data	    bss	    dec	    hex	filename
     792	      8	   1568	   2368	    940	004HSIMeasurement.elf
 Finished building: default.size.stdout
  
-Finished building: 004HSIMeasurement.list
- 
 
-17:46:39 Build Finished. 0 errors, 0 warnings. (took 566ms)
+19:50:22 Build Finished. 0 errors, 0 warnings. (took 477ms)
 

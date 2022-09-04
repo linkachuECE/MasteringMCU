@@ -1,16 +1,10 @@
-17:46:38 **** Build of configuration Debug for project 003PeriClockEnable ****
-make -j4 all 
-arm-none-eabi-gcc -o "003PeriClockEnable.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ebraun\Desktop\MasteringMCU\MCU1\003PeriClockEnable\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="003PeriClockEnable.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: 003PeriClockEnable.elf
- 
+19:50:21 **** Incremental Build of configuration Debug for project 003PeriClockEnable ****
+make -j16 all 
 arm-none-eabi-size   003PeriClockEnable.elf 
-arm-none-eabi-objdump -h -S  003PeriClockEnable.elf  > "003PeriClockEnable.list"
    text	   data	    bss	    dec	    hex	filename
-   3808	    108	   1588	   5504	   1580	003PeriClockEnable.elf
+    716	      8	   1568	   2292	    8f4	003PeriClockEnable.elf
 Finished building: default.size.stdout
  
-Finished building: 003PeriClockEnable.list
- 
 
-17:46:38 Build Finished. 0 errors, 0 warnings. (took 634ms)
+19:50:22 Build Finished. 0 errors, 0 warnings. (took 425ms)
 
