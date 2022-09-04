@@ -238,7 +238,7 @@ typedef struct {
 
 
 // GENERIC MACROS
-#define ENABLE
+#define ENABLE 1
 #define DISABLE 0
 #define SET ENABLE
 #define RESET DISABLE
