@@ -236,6 +236,16 @@ typedef struct {
 // SYSCFG DISABLE
 #define SYSCFG_PCLK_DI()	( RCC->APB2ENR &= ~(1 << 14) )
 
+//************ MACROS TO RESET GPIOX PERIPHERALS *****************//
+#define GPIOA_REG_RESET()		do{ (RCC->AHB1RSTR |= (1 << 0)); (RCC->AHB1RSTR &= ~(1 << 0)); } while(0)
+#define GPIOB_REG_RESET()		do{ (RCC->AHB1RSTR |= (2 << 0)); (RCC->AHB1RSTR &= ~(2 << 0)); } while(0)
+#define GPIOC_REG_RESET()		do{ (RCC->AHB1RSTR |= (3 << 0)); (RCC->AHB1RSTR &= ~(3 << 0)); } while(0)
+#define GPIOD_REG_RESET()		do{ (RCC->AHB1RSTR |= (4 << 0)); (RCC->AHB1RSTR &= ~(4 << 0)); } while(0)
+#define GPIOE_REG_RESET()		do{ (RCC->AHB1RSTR |= (5 << 0)); (RCC->AHB1RSTR &= ~(5 << 0)); } while(0)
+#define GPIOF_REG_RESET()		do{ (RCC->AHB1RSTR |= (6 << 0)); (RCC->AHB1RSTR &= ~(6 << 0)); } while(0)
+#define GPIOG_REG_RESET()		do{ (RCC->AHB1RSTR |= (7 << 0)); (RCC->AHB1RSTR &= ~(7 << 0)); } while(0)
+#define GPIOH_REG_RESET()		do{ (RCC->AHB1RSTR |= (8 << 0)); (RCC->AHB1RSTR &= ~(8 << 0)); } while(0)
+#define GPIOI_REG_RESET()		do{ (RCC->AHB1RSTR |= (9 << 0)); (RCC->AHB1RSTR &= ~(9 << 0)); } while(0)
 
 // GENERIC MACROS
 #define ENABLE 1
@@ -244,5 +254,9 @@ typedef struct {
 #define RESET DISABLE
 #define GPIO_SET SET
 #define GPIO_RESET RESET
+#define GPIO_PIN_SET SET
+#define GPIO_PIN_RESET RESET
+
+#include "stm32407xx_gpio_driver.h"
 
 #endif /* INC_STM32F407XX_H_ */
