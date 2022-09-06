@@ -66,7 +66,6 @@ typedef struct{
 #define GPIO_OP_TYPE_PP		0
 #define GPIO_OP_TYPE_OD		1
 
-
 /*
  * @GPIO_PIN_SPEED
  * GPIO output speeds
