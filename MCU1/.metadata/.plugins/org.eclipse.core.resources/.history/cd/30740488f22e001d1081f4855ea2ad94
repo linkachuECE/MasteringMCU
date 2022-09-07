@@ -153,12 +153,12 @@ typedef struct {
 // EXTI Register
 
 typedef struct {
-	__vo uint32_t IMR;					// Interrupt mask register										0x00
-	__vo uint32_t EMR;					// Event mask register											0x04
-	__vo uint32_t RTSR;					// Rising trigger selection register							0x08
-	__vo uint32_t FTSR;					// Falling trigger selection register							0x0C
-	__vo uint32_t SWIER;				// Software interrupt event register							0x10
-	__vo uint32_t PR;					// Pending register												0x14
+	__vo uint32_t EXTI_IMR;				// Interrupt mask register										0x00
+	__vo uint32_t EXTI_EMR;				// Event mask register											0x04
+	__vo uint32_t EXTI_RTSR;			// Rising trigger selection register							0x08
+	__vo uint32_t EXTI_FTSR;			// Falling trigger selection register							0x0C
+	__vo uint32_t EXTI_SWIER;			// Software interrupt event register							0x10
+	__vo uint32_t EXTI_PR;				// Pending register												0x14
 } EXTI_RegDef_t;
 
 //************ PERIPHERAL DEFINITIONS ***************//
@@ -174,10 +174,6 @@ typedef struct {
 #define GPIOI		( (GPIO_RegDef_t*) GPIOI_BASEADDR )
 
 #define RCC			( (RCC_RegDef_t*) RCC_BASEADDR )
-
-//************* INTERRUPT DEFINITION ****************//
-
-#define EXTI		( (EXTI_RegDef_t*) EXTI_BASEADDR )
 
 //************ CLOCK ENABLE MACROS *****************//
 
