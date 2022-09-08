@@ -23,7 +23,7 @@
 #include <stdio.h>
 
 void delay(void){
-	for(uint32_t i = 0; i < 10000; i++);
+	for(uint32_t i = 0; i < 500000; i++);
 }
 
 int main(void)
@@ -51,8 +51,8 @@ int main(void)
 
 	while(1){
 		if(GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0)){
-			delay();
 			GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
+			delay();
 		}
 	}
 }

@@ -1,9 +1,0 @@
-/*
- * stm324707xx_gpio_driver.c
- *
- *  Created on: Sep 3, 2022
- *      Author: linkachu
- */
-
-#include "stm324707xx_gpio_driver.h"
-#include "stm324707xx.h"

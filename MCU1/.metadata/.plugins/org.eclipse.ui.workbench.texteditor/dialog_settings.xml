@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="EXTI_"/>
-		<item key="wrap" value="false"/>
+		<item key="selection" value="EXTI"/>
+		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
-		<item key="isRegEx" value="false"/>
+		<item key="isRegEx" value="true"/>
 		<list key="findhistory">
+			<item value="exti"/>
+			<item value="GPIO._PCLK_EN();"/>
+			<item value="GPIOD_PCLK_EN();"/>
+			<item value="pGPIOx"/>
+			<item value="SYSCFG_BASEADDR"/>
 			<item value="EXTI_"/>
 			<item value="PB1"/>
 			<item value="LED4"/>
@@ -18,13 +23,10 @@
 			<item value="_EN"/>
 			<item value="PIN_"/>
 			<item value="_DIS"/>
-			<item value=";"/>
-			<item value="|= ("/>
-			<item value="EN"/>
-			<item value=""/>
-			<item value="write"/>
 		</list>
 		<list key="replacehistory">
+			<item value="SYSCFG-&gt;EXTICR[temp1] |= (0x0 &lt;&lt; (temp2 * 4));"/>
+			<item value="pGPIOHandle-&gt;pGPIOx"/>
 			<item value=""/>
 			<item value="EXTPB"/>
 			<item value="EXTLED"/>
@@ -38,8 +40,6 @@
 			<item value="PIN_NO_"/>
 			<item value="PIN__NO_"/>
 			<item value="_DIS"/>
-			<item value="{}"/>
-			<item value="&amp;= ~("/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
