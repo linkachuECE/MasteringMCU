@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="EXTI"/>
+		<item key="selection" value="LED1"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="true"/>
 		<list key="findhistory">
+			<item value="EXTLED"/>
+			<item value="EXTPB"/>
 			<item value="exti"/>
 			<item value="GPIO._PCLK_EN();"/>
 			<item value="GPIOD_PCLK_EN();"/>
@@ -21,10 +23,10 @@
 			<item value="ALTERNATE"/>
 			<item value="_PCLK_"/>
 			<item value="_EN"/>
-			<item value="PIN_"/>
-			<item value="_DIS"/>
 		</list>
 		<list key="replacehistory">
+			<item value="LED1"/>
+			<item value="USRPB"/>
 			<item value="SYSCFG-&gt;EXTICR[temp1] |= (0x0 &lt;&lt; (temp2 * 4));"/>
 			<item value="pGPIOHandle-&gt;pGPIOx"/>
 			<item value=""/>
@@ -38,15 +40,13 @@
 			<item value="_REG_RESET"/>
 			<item value="_DI"/>
 			<item value="PIN_NO_"/>
-			<item value="PIN__NO_"/>
-			<item value="_DIS"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="1928"/>
 		<item key="DIALOG_Y_ORIGIN" value="348"/>
-		<item key="DIALOG_WIDTH" value="322"/>
-		<item key="DIALOG_HEIGHT" value="391"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		<item key="DIALOG_WIDTH" value="363"/>
+		<item key="DIALOG_HEIGHT" value="437"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
 	</section>
 </section>

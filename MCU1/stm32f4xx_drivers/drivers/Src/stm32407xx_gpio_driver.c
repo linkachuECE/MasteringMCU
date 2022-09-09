@@ -105,7 +105,6 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 				EXTI->FTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 				EXTI->RTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 			} else if (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RT){
-				;
 				// 1. Configure the rising trigger selection register (RTSR)
 				EXTI->RTSR |= (1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
 				EXTI->FTSR &= ~(1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber);
@@ -143,11 +142,13 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 	pGPIOHandle->pGPIOx->PUPDR |= temp;
 	temp = 0;
 
-	// 4. Configure the output type
-	temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
-	pGPIOHandle->pGPIOx->OTYPER &= ~(0x1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clearing
-	pGPIOHandle->pGPIOx->OTYPER |= temp;
-	temp = 0;
+	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_OUT){
+		// 4. Configure the output type
+		temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
+		pGPIOHandle->pGPIOx->OTYPER &= ~(0x1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clearing
+		pGPIOHandle->pGPIOx->OTYPER |= temp;
+		temp = 0;
+	}
 
 	// 5. Configure the alternate functionality
 	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_ALTFN){
@@ -300,7 +301,7 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber){
  *
  * @Note		- none
  */
-void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi){
+void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint32_t IRQPriority, uint8_t EnorDi){
 	if (EnorDi == ENABLE){
 		if (IRQNumber >= 0 && IRQNumber <= 31){
 			// Program ISER0 Register
@@ -318,7 +319,7 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t Eno
 			*NVIC_ICER0 |= (1 << IRQNumber);
 		} else if (IRQNumber >= 32 && IRQNumber <= 63) {
 			// Program ICER1 Register
-			*NVIC_ICER2 |= (1 << (IRQNumber % 32));
+			*NVIC_ICER1 |= (1 << (IRQNumber % 32));
 		} else if (IRQNumber >= 64 && IRQNumber <= 95) {
 			// Program ICER2 Register
 			*NVIC_ICER2 |= (1 << (IRQNumber % 32));
@@ -340,13 +341,15 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t Eno
  *
  * @Note		- none
  */
-void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint8_t IRQPriority){
+void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
 	uint8_t iprx = IRQNumber / 4;
 	uint8_t iprx_section = IRQNumber % 4;
 
 	uint8_t shift_amount = ( 8 * iprx_section ) + (8 - NO_PRIORITY_BITS_IMPLEMENTED);
 
-	*((uint32_t*)(NVIC_IPR_BASE_ADDR + (4 * iprx))) |= (IRQPriority << (shift_amount));
+	__vo uint32_t* iprReg = (__vo uint32_t*)(NVIC_IPR_BASE_ADDR + (4 * iprx));
+
+	*iprReg |= (IRQPriority << (shift_amount));
 }
 
 /*****************************************************************
