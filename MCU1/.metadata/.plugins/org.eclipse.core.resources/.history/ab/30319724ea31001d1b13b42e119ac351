@@ -87,7 +87,10 @@ void SPI_Init(SPI_Handle_t *pSPIHandle){
 
 	// 7. SSM Configuration
 	tempreg |= (pSPIHandle->SPIConfig.SSM << SPI_CR1_SSM);
-	tempreg |= (1 << SPI_CR1_SSI);			// Pull SSI high
+	tempreg |= (1 << SPI_CR1_SSI);
+
+	// TEMPORARY FOR TESTING CR1 SPE
+	// tempreg |= (1 << SPI_CR1_SPE);
 
 	pSPIHandle->pSPIx->CR1 |= tempreg;
 
