@@ -6,6 +6,7 @@
  */
 
 #include "stm32f407xx.h"
+#include "stm32407xx_spi_driver.h"
 
 /*****************************************************************
  * @fn			- SPI_PeriClockControl
@@ -50,6 +51,9 @@ void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi){
  */
 void SPI_Init(SPI_Handle_t *pSPIHandle){
 
+	SPI_PeriClockControl(pSPIHandle->pSPIx, ENABLE);
+	SPI_PeripheralControl(pSPIHandle->pSPIx, ENABLE);
+
 	uint32_t tempreg = 0;
 
 	// 1. Master/Slave configuration
@@ -85,7 +89,7 @@ void SPI_Init(SPI_Handle_t *pSPIHandle){
 	// 7. SSM Configuration
 	tempreg |= (pSPIHandle->SPIConfig.SSM << SPI_CR1_SSM);
 
-	pSPIHandle->pSPIx->CR1 = tempreg;
+	pSPIHandle->pSPIx->CR1 |= tempreg;
 }
 
 /*****************************************************************
@@ -106,6 +110,27 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx){
 		SPI2_REG_RESET();
 	else if (pSPIx == SPI3)
 		SPI3_REG_RESET();
+}
+
+//Enable and Disable
+
+/*****************************************************************
+ * @fn			- SPI_PeripheralControl
+ *
+ * @brief		- This function enables or disables a SPI peripheral
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ * @param[in]	- ENABLE or DISABLE
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_PeripheralControl(SPI_RegDef_t * pSPIx, uint8_t EnorDi){
+	if (EnorDi == ENABLE)
+		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
+	else
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
 }
 
 // Data send and receive
