@@ -1,0 +1,161 @@
+/*
+ * stm32407xx_spi_driver.c
+ *
+ *  Created on: Sep 10, 2022
+ *      Author: linkachu
+ */
+
+#include "stm32f407xx.h"
+
+/*****************************************************************
+ * @fn			- SPI_PeriClockControl
+ *
+ * @brief		- This function enables or disables peripheral clock for the given SPI line
+ *
+ * @param[in]	- Base address of the SPI peripheral
+ * @param[in]	- ENABLE or DISABLE macros
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi){
+	if(EnorDi == ENABLE){
+		if(pSPIx == SPI1)
+			SPI1_PCLK_EN();
+		else if (pSPIx == SPI2)
+			SPI2_PCLK_EN();
+		else if (pSPIx == SPI3)
+			SPI3_PCLK_EN();
+	} else if (EnorDi == DISABLE){
+		if(pSPIx == SPI1)
+			SPI1_PCLK_DI();
+		else if (pSPIx == SPI2)
+			SPI2_PCLK_DI();
+		else if (pSPIx == SPI3)
+			SPI3_PCLK_DI();
+	}
+}
+
+/*****************************************************************
+ * @fn			- SPI_Init
+ *
+ * @brief		- This function initializes a single SPI peripheral
+ *
+ * @param[in]	- SPI Handler struct
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_Init(SPI_Handle_t *pSPIHandle){
+
+	uint32_t tempreg = 0;
+
+	// 1. Master/Slave configuration
+	tempreg |= (pSPIHandle->SPIConfig.DeviceMode << 2);
+
+	// 2. Bus configuration
+	if (pSPIHandle->SPIConfig.BusConfig == SPI_BUS_CONFIG_FD){
+		tempreg &= ~(1 << 15);
+	}
+	else if (pSPIHandle->SPIConfig.BusConfig == SPI_BUS_CONFIG_HD){
+		tempreg |= (1 << 15);
+	} else if (pSPIHandle->SPIConfig.BusConfig == SPI_BUS_CONFIG_SIMPLEX_TXONLY){
+
+	} else if (pSPIHandle->SPIConfig.BusConfig == SPI_BUS_CONFIG_SIMPLEX_RXONLY){
+		tempreg |= (1 << 10);
+	}
+	// ADD CONFIGURATION FOR SIMPLEX LATER
+
+	// 3. Clock speed configuration
+	tempreg &= (0b111 << 3);
+	tempreg |= (pSPIHandle->SPIConfig.SclkSpeed << 3);
+
+	// 4. DFF Configuration
+	if (pSPIHandle->SPIConfig.DFF = SPI_DFF_16BITS)
+		tempreg |= (1 << 11);
+	else
+		tempreg &= ~(1 << 11);
+
+	// 5. CPOL Configuration
+	if (pSPIHandle->SPIConfig.CPOL = SPI_CPOL_HIGH)
+		tempreg |= (1 << 1);
+	else
+		tempreg &= ~(1 << 1);
+
+	// 6. CPHA Configuration
+	if (pSPIHandle->SPIConfig.CPHA = SPI_CPHA_SECOND)
+		tempreg |= (1 << 0);
+	else
+		tempreg &= ~(1 << 0);
+
+	// 7. SSM Configuration
+	if (pSPIHandle->SPIConfig.SSM = SPI_SSM_SW){
+		tempreg |= (1 << 9);
+		tempreg |= (1 << 8);
+	}
+	else
+		tempreg &= ~(1 << 9);
+
+	pSPIHandle->CR1 = tempreg;
+}
+
+/*****************************************************************
+ * @fn			- GPIO_DeInit
+ *
+ * @brief		- This function resets a SPI peripheral
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_DeInit(SPI_RegDef_t *pSPIx){
+	if(pSPIx == SPI1)
+		SPI1_REG_RESET();
+	else if (pSPIx == SPI2)
+		SPI2_REG_RESET();
+	else if (pSPIx == SPI3)
+		SPI3_REG_RESET();
+}
+
+// IRQ Handling
+
+void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint32_t IRQPriority, uint8_t EnorDi){
+
+}
+
+void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
+
+}
+
+void SPI_IRQHandling(SPI_Handle_t *pHandle){
+
+}
+
+/*
+typedef struct {
+	__vo uint32_t CR1;				// Control register 1
+	__vo uint32_t CR2;				// Control register 2
+	__vo uint32_t SR;				// Status register
+	__vo uint32_t DR;				// Data register
+	__vo uint32_t CRCPR;			// CRC polynomial register
+	__vo uint32_t RXCRCR;			// RX CRC register
+	__vo uint32_t TXCRCR;			// TX CRC register
+	__vo uint32_t I2SCFGR;			// I2S configuration register
+	__vo uint32_t I2SPR;			// I2S pre-scaler register
+} SPI_RegDef_t;
+ */
+/*
+typedef struct{
+	uint8_t SPI_DeviceMode;
+	uint8_t SPI_BusConfig;
+	uint8_t SPI_SclkSpeed;
+	uint8_t SPI_DFF;
+	uint8_t SPI_CPOL;
+	uint8_t SPI_CPHA;
+	uint8_t SPI_SSM;
+} SPI_Config_t;
+*/

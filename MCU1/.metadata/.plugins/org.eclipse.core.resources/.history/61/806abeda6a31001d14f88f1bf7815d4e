@@ -1,0 +1,215 @@
+/*
+ * stm32407xx_spi_driver.c
+ *
+ *  Created on: Sep 10, 2022
+ *      Author: linkachu
+ */
+
+#include "stm32f407xx.h"
+
+/*****************************************************************
+ * @fn			- SPI_PeriClockControl
+ *
+ * @brief		- This function enables or disables peripheral clock for the given SPI line
+ *
+ * @param[in]	- Base address of the SPI peripheral
+ * @param[in]	- ENABLE or DISABLE macros
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi){
+	if(EnorDi == ENABLE){
+		if(pSPIx == SPI1)
+			SPI1_PCLK_EN();
+		else if (pSPIx == SPI2)
+			SPI2_PCLK_EN();
+		else if (pSPIx == SPI3)
+			SPI3_PCLK_EN();
+	} else if (EnorDi == DISABLE){
+		if(pSPIx == SPI1)
+			SPI1_PCLK_DI();
+		else if (pSPIx == SPI2)
+			SPI2_PCLK_DI();
+		else if (pSPIx == SPI3)
+			SPI3_PCLK_DI();
+	}
+}
+
+/*****************************************************************
+ * @fn			- SPI_Init
+ *
+ * @brief		- This function initializes a single SPI peripheral
+ *
+ * @param[in]	- SPI Handler struct
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_Init(SPI_Handle_t *pSPIHandle){
+
+	uint32_t tempreg = 0;
+
+	// 1. Master/Slave configuration
+	tempreg |= (pSPIHandle->SPIConfig.DeviceMode << SPI_CR1_MSTR);
+
+	// 2. Bus configuration
+	if (pSPIHandle->SPIConfig.BusConfig == SPI_BUS_CONFIG_FD){
+		// Bi-directional mode should be cleared
+		tempreg &= ~(1 << SPI_CR1_BIDI_MODE);
+	}
+	else if (pSPIHandle->SPIConfig.BusConfig == SPI_BUS_CONFIG_HD){
+		// Bi-directional mode should be set
+		tempreg |= (1 << SPI_CR1_BIDI_MODE);
+	} else if (pSPIHandle->SPIConfig.BusConfig == SPI_BUS_CONFIG_SIMPLEX_RXONLY){
+		// Bi-directional mode should be cleared
+		tempreg &= ~(1 << SPI_CR1_BIDI_MODE);
+		// RXONLY bit must be set
+		tempreg |= (1 << SPI_CR1_RX_ONLY);
+	}
+
+	// 3. Clock speed configuration
+	tempreg |= (pSPIHandle->SPIConfig.SclkSpeed << SPI_CR1_BR);
+
+	// 4. DFF Configuration
+	tempreg |= (pSPIHandle->SPIConfig.DFF << SPI_CR1_DFF);
+
+	// 5. CPOL Configuration
+	tempreg |= (pSPIHandle->SPIConfig.CPOL << SPI_CR1_CPOL);
+
+	// 6. CPHA Configuration
+	tempreg |= (pSPIHandle->SPIConfig.CPHA << SPI_CR1_CPHA);
+
+	// 7. SSM Configuration
+	tempreg |= (pSPIHandle->SPIConfig.SSM << SPI_CR1_SSM);
+
+	pSPIHandle->pSPIx->CR1 = tempreg;
+}
+
+/*****************************************************************
+ * @fn			- GPIO_DeInit
+ *
+ * @brief		- This function resets a SPI peripheral
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_DeInit(SPI_RegDef_t *pSPIx){
+	if(pSPIx == SPI1)
+		SPI1_REG_RESET();
+	else if (pSPIx == SPI2)
+		SPI2_REG_RESET();
+	else if (pSPIx == SPI3)
+		SPI3_REG_RESET();
+}
+
+// Data send and receive
+
+/*****************************************************************
+ * @fn			- SPI_GetFlagStatus
+ *
+ * @brief		- This function checks the value of a flag in the SPI status register
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ * @param[in]	- Flag name macro
+ *
+ * @return		- Boolean which says whether the FLAG_SET or FLAG_RESET
+ *
+ * @Note		- none
+ */
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t flagName){
+	if (pSPIx->SR & flagName)
+		return FLAG_SET;
+	else
+		return FLAG_RESET;
+}
+
+/*****************************************************************
+ * @fn			- SPI_SendData
+ *
+ * @brief		- This sends information via SPI
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ * @param[in]	- Pointer to buffer containing information to send
+ * @param[in]	- Length of buffer
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t* pTxBuffer, uint32_t len){
+	for(int i = 0; i < len; i++){
+		while(SPI_GetFlagStatus(pSPIx, SPI_SR_TXE) == FLAG_RESET)
+			;
+		pSPIx->DR = pTxBuffer[i];
+	}
+}
+
+/*****************************************************************
+ * @fn			- SPI_ReceiveData
+ *
+ * @brief		- This function receives data from a peripheral via SPI
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ * @param[in]	- Pointer to buffer to store information in
+ * @param[in]	- Length of receiving buffer
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t* pRxBuffer, uint32_t len){
+
+}
+
+// IRQ Handling
+
+/*****************************************************************
+ * @fn			- SPI_IRQInterruptConfig
+ *
+ * @brief		- TO BE FILLED IN
+ *
+ * @param[in]	- TO BE FILLED IN
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint32_t IRQPriority, uint8_t EnorDi){
+
+}
+
+/*****************************************************************
+ * @fn			- SPI_IRQPriorityConfig
+ *
+ * @brief		- TO BE FILLED IN
+ *
+ * @param[in]	- TO BE FILLED IN
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
+
+}
+
+/*****************************************************************
+ * @fn			- SPI_IRQHandling
+ *
+ * @brief		- TO BE FILLED IN
+ *
+ * @param[in]	- TO BE FILLED IN
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_IRQHandling(SPI_Handle_t *pHandle){
+
+}

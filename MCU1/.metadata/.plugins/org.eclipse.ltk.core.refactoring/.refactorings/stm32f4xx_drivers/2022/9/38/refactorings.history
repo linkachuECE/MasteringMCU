@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;stm32f4xx_drivers/Src/005SPI_sendData.c&apos; to &apos;005SPI_tx_testing.c&apos;" description="Rename resource &apos;005SPI_sendData.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Src/005SPI_sendData.c" name="005SPI_tx_testing.c" stamp="1662857707626" updateReferences="true"/>
+</session>

@@ -1,0 +1,16 @@
+/*
+ * stm32407xx_spi_driver.c
+ *
+ *  Created on: Sep 10, 2022
+ *      Author: linkachu
+ */
+
+#include "stm32407xx_spi_driver.h"
+#include "stm32f407xx.h"
+
+// Peripheral clock setup
+void SPI_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi);
+
+// Init and de-enit
+void SPI_Init(GPIO_Handle_t *pGPIOHandle);
+void SPI_DeInit(GPIO_RegDef_t *pGPIOx);
