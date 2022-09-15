@@ -67,7 +67,7 @@ void SPI2_Init(SPI_Handle_t* SPIDevice){
 	SPIDevice->SPIConfig.CPOL = SPI_CPOL_LOW;
 	SPIDevice->SPIConfig.CPHA = SPI_CPHA_FIRST;
 	SPIDevice->SPIConfig.SSM = SPI_SSM_SW;
-	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_LSBFIRST;
+	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_LSBFIRST
 
 	SPI_Init(SPIDevice);
 }

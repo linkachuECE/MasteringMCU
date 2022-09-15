@@ -1,9 +1,9 @@
-00:15:18 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+00:29:24 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
 make -j16 all 
 arm-none-eabi-gcc "../Src/005SPI_tx_testing.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"/home/linkachu/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/005SPI_tx_testing.d" -MT"Src/005SPI_tx_testing.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/005SPI_tx_testing.o"
 ../Src/005SPI_tx_testing.c: In function 'main':
-../Src/005SPI_tx_testing.c:82:11: warning: unused variable 'myData' [-Wunused-variable]
-   82 |  uint16_t myData[] = {0x0000, 0x1111, 0x2222, 0x3333, 0x4444, 0x5555, 0x6666, 0x7777, 0x8888, 0x9999, 0xAAAA, 0xBBBB, 0xCCCC, 0xDDDD, 0xEEEE, 0xFFFF};
+../Src/005SPI_tx_testing.c:83:11: warning: unused variable 'myData' [-Wunused-variable]
+   83 |  uint16_t myData[] = {0x0000, 0x1111, 0x2222, 0x3333, 0x4444, 0x5555, 0x6666, 0x7777, 0x8888, 0x9999, 0xAAAA, 0xBBBB, 0xCCCC, 0xDDDD, 0xEEEE, 0xFFFF};
       |           ^~~~~~
 arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/linkachu/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: stm32f4xx_drivers.elf
@@ -11,15 +11,15 @@ Finished building target: stm32f4xx_drivers.elf
 arm-none-eabi-size   stm32f4xx_drivers.elf 
 arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
    text	   data	    bss	    dec	    hex	filename
-   3096	      8	   1568	   4672	   1240	stm32f4xx_drivers.elf
+   3112	      8	   1568	   4688	   1250	stm32f4xx_drivers.elf
 Finished building: default.size.stdout
  
 Finished building: stm32f4xx_drivers.list
  
-00:15:29 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+00:29:31 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
 make -j16 all 
 arm-none-eabi-size   stm32f4xx_drivers.elf 
    text	   data	    bss	    dec	    hex	filename
-   3096	      8	   1568	   4672	   1240	stm32f4xx_drivers.elf
+   3112	      8	   1568	   4688	   1250	stm32f4xx_drivers.elf
 Finished building: default.size.stdout
  

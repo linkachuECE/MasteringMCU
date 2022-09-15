@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="mySPIDevice."/>
+		<item key="selection" value="B13"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="D13"/>
+			<item value="LED6"/>
+			<item value="LED3"/>
 			<item value="mySPIDevice."/>
 			<item value=".GPIO"/>
 			<item value="-&gt;GPIO"/>
@@ -20,11 +23,11 @@
 			<item value="GPIO_"/>
 			<item value="EXTLED"/>
 			<item value="EXTPB"/>
-			<item value="exti"/>
-			<item value="GPIO._PCLK_EN();"/>
-			<item value="GPIOD_PCLK_EN();"/>
 		</list>
 		<list key="replacehistory">
+			<item value="B13"/>
+			<item value="B15"/>
+			<item value="D13"/>
 			<item value="SPIDevice-&gt;"/>
 			<item value="-&gt;GPIO"/>
 			<item value=".GPIO"/>
@@ -37,16 +40,13 @@
 			<item value="SPI_"/>
 			<item value="LED1"/>
 			<item value="USRPB"/>
-			<item value="SYSCFG-&gt;EXTICR[temp1] |= (0x0 &lt;&lt; (temp2 * 4));"/>
-			<item value="pGPIOHandle-&gt;pGPIOx"/>
-			<item value="EXTPB"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="1515"/>
 		<item key="DIALOG_Y_ORIGIN" value="348"/>
-		<item key="DIALOG_WIDTH" value="414"/>
-		<item key="DIALOG_HEIGHT" value="454"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		<item key="DIALOG_WIDTH" value="363"/>
+		<item key="DIALOG_HEIGHT" value="437"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
 	</section>
 </section>
