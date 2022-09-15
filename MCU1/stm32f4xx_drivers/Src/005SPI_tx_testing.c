@@ -5,6 +5,12 @@
  *      Author: linkachu
  */
 #include "stm32f407xx.h"
+#include <string.h>
+#include <stdio.h>
+
+void delay(void){
+	for(uint32_t i = 0; i < 20000; i++);
+}
 
 typedef struct {
 	GPIO_Handle_t MOSI;
@@ -56,7 +62,7 @@ void SPI2_Init(SPI_Handle_t* SPIDevice){
 	SPIDevice->pSPIx = SPI2;
 	SPIDevice->SPIConfig.DeviceMode = SPI_DEVICE_MODE_MASTER;
 	SPIDevice->SPIConfig.BusConfig = SPI_BUS_CONFIG_FD;
-	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV2;
+	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV4;
 	SPIDevice->SPIConfig.DFF = SPI_DFF_8BITS;
 	SPIDevice->SPIConfig.CPOL = SPI_CPOL_LOW;
 	SPIDevice->SPIConfig.CPHA = SPI_CPHA_FIRST;
@@ -73,11 +79,13 @@ int main(void){
 	SPI_Handle_t mySPIDevice;
 	SPI2_Init(&mySPIDevice);
 
-	uint8_t myData[10] = {1,2,3,4,5,6,7,8,9,10};
+	uint16_t myData[] = {0x0000, 0x1111, 0x2222, 0x3333, 0x4444, 0x5555, 0x6666, 0x7777, 0x8888, 0x9999, 0xAAAA, 0xBBBB, 0xCCCC, 0xDDDD, 0xEEEE, 0xFFFF};
+	char* myString = "Fuck you";
 
-	SPI_SendData(mySPIDevice.pSPIx, myData, 10);
+	//SPI_SendData(mySPIDevice.pSPIx, myData, 10);
 
-	SPI_PeripheralControl(mySPIDevice->pSPIx, DISABLE);
-
-	while(1);
+	while(1){
+		SPI_SendData(mySPIDevice.pSPIx, (uint8_t*)myString, strlen(myString));
+		delay();
+	}
 }
