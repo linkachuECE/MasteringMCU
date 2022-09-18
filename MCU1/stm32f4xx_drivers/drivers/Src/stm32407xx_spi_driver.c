@@ -87,7 +87,7 @@ void SPI_Init(SPI_Handle_t *pSPIHandle){
 
 	// 7. SSM Configuration
 	tempreg |= (pSPIHandle->SPIConfig.SSM << SPI_CR1_SSM);
-	tempreg |= (1 << SPI_CR1_SSI);			// Pull SSI high
+	SPI_SSIControl(pSPIHandle->pSPIx, ENABLE);
 
 	// 8. Frame Format Configuration
 	tempreg |= (pSPIHandle->SPIConfig.FrameFormat << SPI_CR1_LSB_FIRST);
@@ -138,6 +138,44 @@ void SPI_PeripheralControl(SPI_RegDef_t * pSPIx, uint8_t EnorDi){
 		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
 }
 
+/*****************************************************************
+ * @fn			- SPI_SSIControl
+ *
+ * @brief		- This function enables or disables the SSI (Internal Slave Select) bit
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ * @param[in]	- ENABLE or DISABLE
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_SSIControl(SPI_RegDef_t * pSPIx, uint8_t EnorDi){
+	if (EnorDi == ENABLE)
+		pSPIx->CR1 |= (1 << SPI_CR1_SSI);			// Pull SSI high
+	else
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
+}
+
+/*****************************************************************
+ * @fn			- SPI_SSOEControl
+ *
+ * @brief		- This function enables or disables the SSOE (SS Output Enable) bit
+ *
+ * @param[in]	- Pointer to SPI peripheral base address
+ * @param[in]	- ENABLE or DISABLE
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_SSOEControl(SPI_RegDef_t * pSPIx, uint8_t EnorDi){
+	if (EnorDi == ENABLE)
+		pSPIx->CR2 |= (1 << SPI_CR2_SSOE);
+	else
+		pSPIx->CR2 &= ~(1 << SPI_CR2_SSOE);
+}
+
 // Data send and receive
 
 /*****************************************************************
@@ -174,7 +212,7 @@ uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t flagName){
  */
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t* pTxBuffer, uint32_t len){
 	// Dummy variable for reading from the data register
-	uint32_t dummy;
+	// uint32_t dummy;
 
 	while(len > 0){
 		// 1. Wait until TXE is set
@@ -184,21 +222,12 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t* pTxBuffer, uint32_t len){
 		// 2. Check the DFF bit in CR1
 		if(pSPIx->CR1 & (1 << SPI_CR1_DFF)){
 			pSPIx->DR = *((uint16_t*)pTxBuffer);
-			len--;
 			pTxBuffer += 2;
 		} else {
 			pSPIx->DR = *((uint8_t*)pTxBuffer);
-
-			// Read from data register to clear the RXNE register
-			/*
-			while(SPI_GetFlagStatus(pSPIx, SPI_RXNE_FLAG) == FLAG_RESET)
-				;
-			dummy = pSPIx->DR;
-			*/
-
-			len--;
 			pTxBuffer++;
 		}
+		len--;
 	}
 }
 

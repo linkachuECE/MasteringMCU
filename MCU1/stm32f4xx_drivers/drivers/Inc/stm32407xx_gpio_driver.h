@@ -55,6 +55,7 @@ typedef struct{
 #define GPIO_MODE_OUT 		1
 #define GPIO_MODE_ALTFN		2
 #define GPIO_MODE_ANALOG	3
+// INTERRUPT MODES:
 #define GPIO_MODE_IT_FT		4		// Falling-edge detection
 #define GPIO_MODE_IT_RT		5		// Rising-edge detection
 #define GPIO_MODE_IT_RFT	6		// Rising and falling edge detection

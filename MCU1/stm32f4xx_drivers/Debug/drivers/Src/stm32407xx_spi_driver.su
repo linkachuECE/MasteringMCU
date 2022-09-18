@@ -2,9 +2,11 @@
 ../drivers/Src/stm32407xx_spi_driver.c:52:6:SPI_Init	24	static
 ../drivers/Src/stm32407xx_spi_driver.c:111:6:SPI_DeInit	16	static
 ../drivers/Src/stm32407xx_spi_driver.c:134:6:SPI_PeripheralControl	16	static
-../drivers/Src/stm32407xx_spi_driver.c:155:9:SPI_GetFlagStatus	16	static
-../drivers/Src/stm32407xx_spi_driver.c:175:6:SPI_SendData	24	static
-../drivers/Src/stm32407xx_spi_driver.c:218:6:SPI_ReceiveData	24	static
-../drivers/Src/stm32407xx_spi_driver.c:235:6:SPI_IRQInterruptConfig	16	static
-../drivers/Src/stm32407xx_spi_driver.c:250:6:SPI_IRQPriorityConfig	16	static
-../drivers/Src/stm32407xx_spi_driver.c:265:6:SPI_IRQHandling	16	static
+../drivers/Src/stm32407xx_spi_driver.c:153:6:SPI_SSIControl	16	static
+../drivers/Src/stm32407xx_spi_driver.c:172:6:SPI_SSOEControl	16	static
+../drivers/Src/stm32407xx_spi_driver.c:193:9:SPI_GetFlagStatus	16	static
+../drivers/Src/stm32407xx_spi_driver.c:213:6:SPI_SendData	24	static
+../drivers/Src/stm32407xx_spi_driver.c:247:6:SPI_ReceiveData	24	static
+../drivers/Src/stm32407xx_spi_driver.c:264:6:SPI_IRQInterruptConfig	16	static
+../drivers/Src/stm32407xx_spi_driver.c:279:6:SPI_IRQPriorityConfig	16	static
+../drivers/Src/stm32407xx_spi_driver.c:294:6:SPI_IRQHandling	16	static

@@ -353,6 +353,7 @@ typedef struct {
 
 #define SPI_CR2_RXDMAEN		0
 #define SPI_CR2_TXDMAEN		1
+#define SPI_CR2_SSOE		2
 #define SPI_CR2_FRF			4
 #define SPI_CR2_ERRIE		5
 #define SPI_CR2_RXNEIE		6
