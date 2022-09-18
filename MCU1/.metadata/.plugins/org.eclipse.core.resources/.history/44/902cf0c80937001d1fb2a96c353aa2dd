@@ -252,10 +252,10 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t* pRxBuffer, uint32_t len){
 
 		// 2. Check the DFF bit in CR1
 		if(pSPIx->CR1 & (1 << SPI_CR1_DFF)){
-			*((uint16_t*)pRxBuffer) = pSPIx->DR;
+			*((uint16_t*)*pRxBuffer) = pSPIx->DR;
 			pRxBuffer += 2;
 		} else {
-			*((uint8_t*)pRxBuffer) = pSPIx->DR;
+			*((uint8_t*)*pRxBuffer) = pSPIx->DR;
 			pRxBuffer++;
 		}
 		len--;
