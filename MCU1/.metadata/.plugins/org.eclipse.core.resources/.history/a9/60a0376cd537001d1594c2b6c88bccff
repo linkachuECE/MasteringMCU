@@ -293,7 +293,7 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t pinNumber){
 /*****************************************************************
  * @fn			- GPIO_IRQInterruptConfig
  *
- * @brief		- This function configures the interrupt settings for a GPIO pin
+ * @brief		- This function configures the interrupt settings for a pin
  *
  * @param[in]	- IRQ Number
  * @param[in]	- Priority to set
@@ -334,7 +334,7 @@ void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint32_t IRQPriority, uint8_t En
 /*****************************************************************
  * @fn			- GPIO_IRQPriorityConfig
  *
- * @brief		- This function sets the priority for a GPIO IRQ number
+ * @brief		- This function sets the priority for an IRQ number
  *
  * @param[in]	- IRQ Number
  * @param[in]	- IRQ Priority to set from 0-15

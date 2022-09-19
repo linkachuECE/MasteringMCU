@@ -262,52 +262,14 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t* pRxBuffer, uint32_t len){
 	}
 }
 
-// Data Send and Receive from interrupts
-
-/*****************************************************************
- * @fn			- SPI_SendDataIT
- *
- * @brief		- This sends information via a SPI interrupt
- *
- * @param[in]	- Pointer to SPI Handle
- * @param[in]	- Pointer to buffer containing information to send
- * @param[in]	- Length of buffer
- *
- * @return		- none
- *
- * @Note		- none
- */
-void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t* pTxBuffer, uint32_t len){
-
-}
-
-/*****************************************************************
- * @fn			- SPI_ReceiveDataIT
- *
- * @brief		- This function receives data from a peripheral via a SPI interrupt
- *
- * @param[in]	- Pointer to SPI Handle
- * @param[in]	- Pointer to buffer to store information in
- * @param[in]	- Length of receiving buffer
- *
- * @return		- none
- *
- * @Note		- none
- */
-void SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t* pRxBuffer, uint32_t len){
-
-}
-
 // IRQ Handling
 
 /*****************************************************************
  * @fn			- SPI_IRQInterruptConfig
  *
- * @brief		- This function configures the interrupt settings for a SPI peripheral
+ * @brief		- TO BE FILLED IN
  *
- * @param[in]	- IRQ Number
- * @param[in]	- Priority to set
- * @param[in]	- ENABLE or DISABLE
+ * @param[in]	- TO BE FILLED IN
  *
  * @return		- none
  *
@@ -315,50 +277,26 @@ void SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t* pRxBuffer, uint32_t le
  */
 void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint32_t IRQPriority, uint8_t EnorDi){
 	// The enable bits for all three SPIs are in ISER1
-	// The clear bits for all three SPIs are in ICER2
-	if (EnorDi == ENABLE){
+
+	if (EnorDi == ENABLE)
 		*NVIC_ISER1 |= (1 << (IRQNumber % 32));
-		if (IRQNumber == IRQ_NO_SPI1){
-			SPI1->CR2 |= (1 << SPI_CR2_RXNEIE);
-			SPI1->CR2 |= (1 << SPI_CR2_TXEIE);
-			SPI1->CR2 |= (1 << SPI_CR2_ERRIE);
-		} else if (IRQNumber == IRQ_NO_SPI2){
-			SPI2->CR2 |= (1 << SPI_CR2_RXNEIE);
-			SPI2->CR2 |= (1 << SPI_CR2_TXEIE);
-			SPI2->CR2 |= (1 << SPI_CR2_ERRIE);
-		} else if (IRQNumber == IRQ_NO_SPI3){
-			SPI3->CR2 |= (1 << SPI_CR2_RXNEIE);
-			SPI3->CR2 |= (1 << SPI_CR2_TXEIE);
-			SPI3->CR2 |= (1 << SPI_CR2_ERRIE);
-		}
-	} else
+	else
 		*NVIC_ICER1 |= (1 << (IRQNumber % 32));
-
-
-	SPI_IRQPriorityConfig(IRQNumber, IRQPriority);
 }
 
 /*****************************************************************
  * @fn			- SPI_IRQPriorityConfig
  *
- * @brief		- This function sets the priority for a SPI IRQ number
+ * @brief		- TO BE FILLED IN
  *
- * @param[in]	- IRQ Number
- * @param[in]	- IRQ Priority to set from 0-15
+ * @param[in]	- TO BE FILLED IN
  *
  * @return		- none
  *
  * @Note		- none
  */
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
-	uint8_t iprx = IRQNumber / 4;
-	uint8_t iprx_section = IRQNumber % 4;
 
-	uint8_t shift_amount = ( 8 * iprx_section ) + (8 - NO_PRIORITY_BITS_IMPLEMENTED);
-
-	__vo uint32_t* iprReg = (__vo uint32_t*)(NVIC_IPR_BASE_ADDR + (4 * iprx));
-
-	*iprReg |= (IRQPriority << (shift_amount));
 }
 
 /*****************************************************************
@@ -373,11 +311,5 @@ void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
  * @Note		- none
  */
 void SPI_IRQHandling(SPI_Handle_t *pHandle){
-	if(pHandle->pSPIx == SPI1){
 
-	} else if(pHandle->pSPIx == SPI2){
-
-	} else if(pHandle->pSPIx == SPI3){
-
-	}
 }

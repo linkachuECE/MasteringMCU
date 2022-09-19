@@ -269,7 +269,7 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t* pRxBuffer, uint32_t len){
  *
  * @brief		- This sends information via a SPI interrupt
  *
- * @param[in]	- Pointer to SPI Handle
+ * @param[in]	- Pointer to SPI peripheral base address
  * @param[in]	- Pointer to buffer containing information to send
  * @param[in]	- Length of buffer
  *
@@ -277,7 +277,7 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx, uint8_t* pRxBuffer, uint32_t len){
  *
  * @Note		- none
  */
-void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t* pTxBuffer, uint32_t len){
+void SPI_SendDataIT(SPI_RegDef_t *pSPIx, uint8_t* pTxBuffer, uint32_t len){
 
 }
 
@@ -286,7 +286,7 @@ void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t* pTxBuffer, uint32_t len){
  *
  * @brief		- This function receives data from a peripheral via a SPI interrupt
  *
- * @param[in]	- Pointer to SPI Handle
+ * @param[in]	- Pointer to SPI peripheral base address
  * @param[in]	- Pointer to buffer to store information in
  * @param[in]	- Length of receiving buffer
  *
@@ -294,7 +294,7 @@ void SPI_SendDataIT(SPI_Handle_t *pSPIHandle, uint8_t* pTxBuffer, uint32_t len){
  *
  * @Note		- none
  */
-void SPI_ReceiveDataIT(SPI_Handle_t *pSPIHandle, uint8_t* pRxBuffer, uint32_t len){
+void SPI_ReceiveDataIT(SPI_RegDef_t *pSPIx, uint8_t* pRxBuffer, uint32_t len){
 
 }
 

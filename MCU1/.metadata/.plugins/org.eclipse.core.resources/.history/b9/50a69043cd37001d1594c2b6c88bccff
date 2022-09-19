@@ -181,6 +181,9 @@ int main(void){
 	SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
 
 	while(1){
+		SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
+
+		printf("SPI2 Enabled\n");
 
 		uint8_t cmdCode;
 		uint8_t ackByte;
@@ -190,9 +193,6 @@ int main(void){
 		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
 		delay();
 
-		SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
-
-		printf("SPI Communication opened\n");
 
 		cmdCode = COMMAND_LED_CTRL;
 
