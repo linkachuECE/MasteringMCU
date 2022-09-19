@@ -30,7 +30,7 @@
 #define LED_PIN		9
 
 void delay(void){
-	for(uint32_t i = 0; i < 50000; i++);
+	for(uint32_t i = 0; i < 20000; i++);
 }
 
 typedef struct {
@@ -162,8 +162,9 @@ void dummyReadDelayWrite(SPI_RegDef_t* pSPIx){
 }
 
 int main(void){
-	uint8_t dummy_read;
-	uint8_t dummy_write;
+
+	uint8_t dummyWriteByte = 0xFF;
+	uint8_t dummyReadByte;
 
 	// Initialize the appropriate GPIO pins on port B
 	SPI_GPIO_Pins_t spi2Pins;
@@ -200,8 +201,6 @@ int main(void){
 			args[1] = LED_ON;
 
 			SPI_SendData(mySPIDevice.pSPIx, args, 2);
-
-			printf("LED_CTRL Executed\n");
 		}
 
 
@@ -222,8 +221,6 @@ int main(void){
 
 			uint8_t analogRead;
 			SPI_ReceiveData(mySPIDevice.pSPIx, &analogRead, 1);
-
-			printf("Read from analog: %d\n", analogRead);
 		}
 
 		//******** 3. COMMAND_LED_READ *********** //
@@ -243,8 +240,6 @@ int main(void){
 
 			uint8_t ledread;
 			SPI_ReceiveData(SPI2, &ledread, 1);
-
-			printf("Read from LED: %d\n", ledread);
 		}
 
 		//******** 4. COMMAND_PRINT *********** //
@@ -256,24 +251,9 @@ int main(void){
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
-			uint8_t message[] = "Test message";
+			//args[0] = ;
 
-			args[0] = strlen((char*)message);
-
-			SPI_SendData(mySPIDevice.pSPIx, args, 1);
-
-			// Dummy read
-			SPI_ReceiveData(mySPIDevice.pSPIx, &dummy_read, 1);
-
-			delay();
-
-			// Send message
-			for(int i = 0; i < args[0]; i++){
-				SPI_SendData(mySPIDevice.pSPIx, &message[i], 1);
-				SPI_ReceiveData(mySPIDevice.pSPIx, &dummy_read, 1);
-			}
-
-			printf("COMMAND_PRINT executed\n");
+			SPI_SendData(SPI2, args, 1);
 		}
 
 
@@ -285,18 +265,15 @@ int main(void){
 
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
 
-		uint8_t ID[11];
-
 		if(SPI_Verify_Response(ackByte)){
+			args[0] = LED_PIN;
 
-			for(uint8_t i = 0; i < 10; i++){
-				SPI_SendData(mySPIDevice.pSPIx, &dummy_write, 1);
-				SPI_ReceiveData(mySPIDevice.pSPIx, &ID[i], 1);
-			}
+			SPI_SendData(SPI2, args, 1);
 
-			ID[11] = '\0';
+			dummyReadDelayWrite(mySPIDevice.pSPIx);
 
-			printf("ID retrieved from COMMAND_ID_READ:%s\n", (char*)ID);
+			char ID[10];
+			SPI_ReceiveData(SPI2, &ledread, 1);
 		}
 
 		delay();
@@ -304,7 +281,5 @@ int main(void){
 		while(SPI_GetFlagStatus(mySPIDevice.pSPIx, SPI_BSY_FLAG));
 
 		SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
-
-		printf("SPI Communication closed\n");
 	}
 }

@@ -30,7 +30,7 @@
 #define LED_PIN		9
 
 void delay(void){
-	for(uint32_t i = 0; i < 50000; i++);
+	for(uint32_t i = 0; i < 20000; i++);
 }
 
 typedef struct {
@@ -147,23 +147,10 @@ uint8_t SPI_Verify_Response(uint8_t ackbyte){
 	}
 }
 
-void dummyReadDelayWrite(SPI_RegDef_t* pSPIx){
+int main(void){
+
 	uint8_t dummyWriteByte = 0xFF;
 	uint8_t dummyReadByte;
-
-	// Do dummy read to clear the RXNE register
-	SPI_ReceiveData(pSPIx, &dummyReadByte, 1);
-
-	// Insert a delay long enough for the arduino to make a measurement
-	delay();
-
-	// Send a dummy byte
-	SPI_SendData(pSPIx, &dummyWriteByte, 1);
-}
-
-int main(void){
-	uint8_t dummy_read;
-	uint8_t dummy_write;
 
 	// Initialize the appropriate GPIO pins on port B
 	SPI_GPIO_Pins_t spi2Pins;
@@ -193,17 +180,14 @@ int main(void){
 
 		cmdCode = COMMAND_LED_CTRL;
 
-		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
+		SendCmdGetAckByte(SPI2, &cmdCode, &ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
 			args[0] = LED_PIN;
 			args[1] = LED_ON;
 
-			SPI_SendData(mySPIDevice.pSPIx, args, 2);
-
-			printf("LED_CTRL Executed\n");
+			SPI_SendData(SPI2, args, 2);
 		}
-
 
 		//******** 2. CMD_SENSOR_READ *********** //
 		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
@@ -211,100 +195,30 @@ int main(void){
 
 		cmdCode = COMMAND_SENSOR_READ;
 
-		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
+		SendCmdGetAckByte(SPI2, &cmdCode, &ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
 			args[0] = ANALOG_PIN0;
 
-			SPI_SendData(mySPIDevice.pSPIx, args, 1);
-
-			dummyReadDelayWrite(mySPIDevice.pSPIx);
-
-			uint8_t analogRead;
-			SPI_ReceiveData(mySPIDevice.pSPIx, &analogRead, 1);
-
-			printf("Read from analog: %d\n", analogRead);
-		}
-
-		//******** 3. COMMAND_LED_READ *********** //
-		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
-		delay();
-
-		cmdCode = COMMAND_LED_READ;
-
-		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
-
-		if(SPI_Verify_Response(ackByte)){
-			args[0] = LED_PIN;
-
 			SPI_SendData(SPI2, args, 1);
-
-			dummyReadDelayWrite(mySPIDevice.pSPIx);
-
-			uint8_t ledread;
-			SPI_ReceiveData(SPI2, &ledread, 1);
-
-			printf("Read from LED: %d\n", ledread);
 		}
 
-		//******** 4. COMMAND_PRINT *********** //
-		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
+		// Do dummy read to clear the RXNE register
+		SPI_ReceiveData(SPI2, &dummyReadByte, 1);
+
+		// Insert a delay so that the arduino can make the appropriate measurement
 		delay();
 
-		cmdCode = COMMAND_PRINT;
+		// Send a dummy byte, fetch the response from the slave
+		SPI_SendData(SPI2, &dummyWriteByte, 1);
 
-		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
-
-		if(SPI_Verify_Response(ackByte)){
-			uint8_t message[] = "Test message";
-
-			args[0] = strlen((char*)message);
-
-			SPI_SendData(mySPIDevice.pSPIx, args, 1);
-
-			// Dummy read
-			SPI_ReceiveData(mySPIDevice.pSPIx, &dummy_read, 1);
-
-			delay();
-
-			// Send message
-			for(int i = 0; i < args[0]; i++){
-				SPI_SendData(mySPIDevice.pSPIx, &message[i], 1);
-				SPI_ReceiveData(mySPIDevice.pSPIx, &dummy_read, 1);
-			}
-
-			printf("COMMAND_PRINT executed\n");
-		}
-
-
-		//******** 5. COMMAND_ID_READ *********** //
-		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
-		delay();
-
-		cmdCode = COMMAND_ID_READ;
-
-		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
-
-		uint8_t ID[11];
-
-		if(SPI_Verify_Response(ackByte)){
-
-			for(uint8_t i = 0; i < 10; i++){
-				SPI_SendData(mySPIDevice.pSPIx, &dummy_write, 1);
-				SPI_ReceiveData(mySPIDevice.pSPIx, &ID[i], 1);
-			}
-
-			ID[11] = '\0';
-
-			printf("ID retrieved from COMMAND_ID_READ:%s\n", (char*)ID);
-		}
+		uint8_t analogRead;
+		SPI_ReceiveData(SPI2, &analogRead, 1);
 
 		delay();
 
 		while(SPI_GetFlagStatus(mySPIDevice.pSPIx, SPI_BSY_FLAG));
 
 		SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
-
-		printf("SPI Communication closed\n");
 	}
 }

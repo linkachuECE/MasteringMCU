@@ -200,8 +200,6 @@ int main(void){
 			args[1] = LED_ON;
 
 			SPI_SendData(mySPIDevice.pSPIx, args, 2);
-
-			printf("LED_CTRL Executed\n");
 		}
 
 
@@ -222,8 +220,6 @@ int main(void){
 
 			uint8_t analogRead;
 			SPI_ReceiveData(mySPIDevice.pSPIx, &analogRead, 1);
-
-			printf("Read from analog: %d\n", analogRead);
 		}
 
 		//******** 3. COMMAND_LED_READ *********** //
@@ -243,8 +239,6 @@ int main(void){
 
 			uint8_t ledread;
 			SPI_ReceiveData(SPI2, &ledread, 1);
-
-			printf("Read from LED: %d\n", ledread);
 		}
 
 		//******** 4. COMMAND_PRINT *********** //
@@ -256,14 +250,16 @@ int main(void){
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
-			uint8_t message[] = "Test message";
+			char* message = "Test message";
 
-			args[0] = strlen((char*)message);
+			args[0] = strlen(message);
 
 			SPI_SendData(mySPIDevice.pSPIx, args, 1);
 
 			// Dummy read
 			SPI_ReceiveData(mySPIDevice.pSPIx, &dummy_read, 1);
+
+			SPI_SendData(mySPIDevice.pSPIx, (uint8_t*)message, strlen(message));
 
 			delay();
 
@@ -272,8 +268,6 @@ int main(void){
 				SPI_SendData(mySPIDevice.pSPIx, &message[i], 1);
 				SPI_ReceiveData(mySPIDevice.pSPIx, &dummy_read, 1);
 			}
-
-			printf("COMMAND_PRINT executed\n");
 		}
 
 
@@ -285,18 +279,15 @@ int main(void){
 
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
 
-		uint8_t ID[11];
+		char ID[10];
 
 		if(SPI_Verify_Response(ackByte)){
 
-			for(uint8_t i = 0; i < 10; i++){
-				SPI_SendData(mySPIDevice.pSPIx, &dummy_write, 1);
-				SPI_ReceiveData(mySPIDevice.pSPIx, &ID[i], 1);
-			}
+			SPI_SendData(mySPIDevice.pSPIx, args, 1);
 
-			ID[11] = '\0';
+			dummyReadDelayWrite(mySPIDevice.pSPIx);
 
-			printf("ID retrieved from COMMAND_ID_READ:%s\n", (char*)ID);
+			SPI_ReceiveData(mySPIDevice.pSPIx, ID, 10);
 		}
 
 		delay();
@@ -304,7 +295,5 @@ int main(void){
 		while(SPI_GetFlagStatus(mySPIDevice.pSPIx, SPI_BSY_FLAG));
 
 		SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
-
-		printf("SPI Communication closed\n");
 	}
 }

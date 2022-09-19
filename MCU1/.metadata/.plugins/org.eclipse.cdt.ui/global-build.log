@@ -1,14 +1,7 @@
-19:45:45 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+22:33:57 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
 make -j16 all 
-arm-none-eabi-gcc "../Src/007SPI_cmdhandling.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"/home/linkachu/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/007SPI_cmdhandling.d" -MT"Src/007SPI_cmdhandling.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/007SPI_cmdhandling.o"
-arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/linkachu/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: stm32f4xx_drivers.elf
- 
 arm-none-eabi-size   stm32f4xx_drivers.elf 
-arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
    text	   data	    bss	    dec	    hex	filename
-   4092	      8	   1568	   5668	   1624	stm32f4xx_drivers.elf
+   9516	    108	   1588	  11212	   2bcc	stm32f4xx_drivers.elf
 Finished building: default.size.stdout
- 
-Finished building: stm32f4xx_drivers.list
  
