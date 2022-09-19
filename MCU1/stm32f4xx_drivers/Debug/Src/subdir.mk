@@ -5,17 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/006SPI_txonly_arduino.c \
+../Src/007SPI_cmdhandling.c \
 ../Src/syscalls.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/006SPI_txonly_arduino.o \
+./Src/007SPI_cmdhandling.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/006SPI_txonly_arduino.d \
+./Src/007SPI_cmdhandling.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d 
 
@@ -27,7 +27,7 @@ Src/%.o Src/%.su: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/006SPI_txonly_arduino.d ./Src/006SPI_txonly_arduino.o ./Src/006SPI_txonly_arduino.su ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/007SPI_cmdhandling.d ./Src/007SPI_cmdhandling.o ./Src/007SPI_cmdhandling.su ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 
