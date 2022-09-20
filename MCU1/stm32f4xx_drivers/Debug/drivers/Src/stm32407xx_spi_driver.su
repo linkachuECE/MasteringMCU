@@ -7,6 +7,8 @@
 ../drivers/Src/stm32407xx_spi_driver.c:193:9:SPI_GetFlagStatus	16	static
 ../drivers/Src/stm32407xx_spi_driver.c:213:6:SPI_SendData	24	static
 ../drivers/Src/stm32407xx_spi_driver.c:247:6:SPI_ReceiveData	24	static
-../drivers/Src/stm32407xx_spi_driver.c:278:6:SPI_IRQInterruptConfig	16	static
-../drivers/Src/stm32407xx_spi_driver.c:293:6:SPI_IRQPriorityConfig	16	static
-../drivers/Src/stm32407xx_spi_driver.c:308:6:SPI_IRQHandling	16	static
+../drivers/Src/stm32407xx_spi_driver.c:280:9:SPI_SendDataIT	32	static
+../drivers/Src/stm32407xx_spi_driver.c:315:6:SPI_ReceiveDataIT	24	static
+../drivers/Src/stm32407xx_spi_driver.c:334:6:SPI_IRQInterruptConfig	16	static
+../drivers/Src/stm32407xx_spi_driver.c:358:6:SPI_IRQPriorityConfig	24	static
+../drivers/Src/stm32407xx_spi_driver.c:380:6:SPI_IRQHandling	16	static
