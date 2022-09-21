@@ -8,6 +8,12 @@
 #include "stm32f407xx.h"
 #include "stm32407xx_spi_driver.h"
 
+
+// HELPER FUNCTION PROTOTYPES
+static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle);
+static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle);
+static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle);
+
 /*****************************************************************
  * @fn			- SPI_PeriClockControl
  *
@@ -393,12 +399,148 @@ void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
  *
  * @Note		- none
  */
-void SPI_IRQHandling(SPI_Handle_t *pHandle){
-	if(pHandle->pSPIx == SPI1){
 
-	} else if(pHandle->pSPIx == SPI2){
+void SPI_IRQHandling(SPI_Handle_t *pSPIHandle){
+	uint8_t temp1, temp2;
 
-	} else if(pHandle->pSPIx == SPI3){
+	// First check for TXE and check that the TXE interrupt was enabled
+	temp1 = pSPIHandle->pSPIx->SR & (SPI_TXE_FLAG);
+	temp2 = pSPIHandle->pSPIx->CR2 & (1 << SPI_CR2_TXEIE);
 
+	if (temp1 && temp2){
+		// Handle TXE
+		spi_txe_interrupt_handle(pSPIHandle);
 	}
+
+	temp1 = pSPIHandle->pSPIx->SR & (SPI_RXNE_FLAG);
+	temp2 = pSPIHandle->pSPIx->CR2 & (1 << SPI_CR2_RXNEIE);
+
+	if (temp1 && temp2){
+		// Handle TXE
+		spi_rxne_interrupt_handle(pSPIHandle);
+	}
+
+	temp1 = pSPIHandle->pSPIx->SR & (1 << SPI_SR_OVR);
+	temp2 = pSPIHandle->pSPIx->CR2 & (1 << SPI_CR2_ERRIE);
+
+	if (temp1 && temp2){
+		// Handle TXE
+		spi_ovr_err_interrupt_handle(pSPIHandle);
+	}
+
+}
+
+/*****************************************************************
+ * @fn			- SPI_ClearOVRFlag
+ *
+ * @brief		- Clears the OVR flag by reading from the data register, followed by the status register
+ *
+ * @param[in]	- Pointer to base address of SPI peripheral
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+
+void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx){
+	uint8_t dummy;
+	// 1. Clear the ovr flag
+	dummy = pSPIx->DR;
+	dummy = pSPIx->SR;
+}
+
+/*****************************************************************
+ * @fn			- SPI_CloseTransmission
+ *
+ * @brief		- Turns off the TXE interrupt, sets the tx buffer to NULL, and sets the transmission state to ready
+ *
+ * @param[in]	- Pointer to SPI Handler
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_CloseTransmission(SPI_Handle_t *pSPIHandle){
+	pSPIHandle->pSPIx->CR2 &= ~(1 << SPI_CR2_TXEIE);
+	pSPIHandle->pTxBuffer = NULL;
+	pSPIHandle->TxState = SPI_READY;
+	SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_TX_CMPLT);
+}
+
+/*****************************************************************
+ * @fn			- SPI_CloseReception
+ *
+ * @brief		- Turns off the RXNE interrupt, sets the rx buffer to NULL, and sets the reception state to ready
+ *
+ * @param[in]	- Pointer to SPI Handler
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void SPI_CloseReception(SPI_Handle_t *pSPIHandle){
+	pSPIHandle->pSPIx->CR2 &= ~(1 << SPI_CR2_RXNEIE);
+	pSPIHandle->pRxBuffer = NULL;
+	pSPIHandle->RxState = SPI_READY;
+	SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_TX_CMPLT);
+}
+
+/*****************************************************************
+ * @fn			- SPI_CloseReception
+ *
+ * @brief		- Turns off the RXNE interrupt, sets the rx buffer to NULL, and sets the reception state to ready
+ *
+ * @param[in]	- Pointer to SPI Handler
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+__weak void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle, uint8_t AppEv) {
+
+}
+
+// HELPER FUNCTION IMPLEMENTATIONS
+static void spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle){
+	// Check the DFF bit in CR1
+	if(pSPIHandle->pSPIx->CR1 & (1 << SPI_CR1_DFF)){
+		pSPIHandle->pSPIx->DR = *((uint16_t*)pSPIHandle->pTxBuffer);
+		pSPIHandle->pTxBuffer += 2;
+	} else {
+		pSPIHandle->pSPIx->DR = *((uint8_t*)pSPIHandle->pTxBuffer);
+		pSPIHandle->pTxBuffer++;
+	}
+	pSPIHandle->TxLen--;
+
+	if (pSPIHandle->TxLen == 0){
+		SPI_CloseTransmission(pSPIHandle);
+		SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_TX_CMPLT);
+	}
+}
+
+static void spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle){
+	// 1. Check the DFF bit in CR1
+	if(pSPIHandle->pSPIx->CR1 & (1 << SPI_CR1_DFF)){
+		*((uint16_t*)pSPIHandle->pRxBuffer) = pSPIHandle->pSPIx->DR;
+		pSPIHandle->pRxBuffer += 2;
+	} else {
+		*((uint8_t*)pSPIHandle->pRxBuffer) = pSPIHandle->pSPIx->DR;
+		pSPIHandle->pRxBuffer++;
+	}
+	pSPIHandle->RxLen--;
+
+	if (pSPIHandle->TxLen == 0){
+		SPI_CloseReception(pSPIHandle);
+		SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_TX_CMPLT);
+	}
+}
+
+static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle){
+	// 1. Clear the ovr flag
+	if(pSPIHandle->TxState != SPI_BUSY_IN_TX){
+		SPI_ClearOVRFlag(pSPIHandle->pSPIx);
+		// 2. Inform the application
+		SPI_ApplicationEventCallback(pSPIHandle, SPI_EVENT_TX_CMPLT);
+	}
+
 }

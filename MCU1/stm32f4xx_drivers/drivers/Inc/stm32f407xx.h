@@ -9,8 +9,10 @@
 #define INC_STM32F407XX_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
 #define __vo volatile
+#define __weak __attribute__((weak))
 
 //***************** PROCESSOR SPECIFIC DETAILS **********************//
 // ARM Cortex Mx Processor NVIC ISERx register Addresses
