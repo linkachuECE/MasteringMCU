@@ -211,6 +211,10 @@ typedef struct {
 #define SPI2		( (SPI_RegDef_t*) SPI2_BASEADDR )
 #define SPI3		( (SPI_RegDef_t*) SPI3_BASEADDR )
 
+#define I2C1		( (I2C_RegDef_t*) I2C1_BASEADDR )
+#define I2C2		( (I2C_RegDef_t*) I2C2_BASEADDR )
+#define I2C3		( (I2C_RegDef_t*) I2C3_BASEADDR )
+
 //************* INTERRUPT DEFINITION ****************//
 
 #define EXTI		( (EXTI_RegDef_t*) EXTI_BASEADDR )
@@ -305,6 +309,11 @@ typedef struct {
 #define SPI2_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 14)); (RCC->APB1RSTR &= ~(1 << 14)); } while(0)
 #define SPI3_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 15)); (RCC->AHB1RSTR &= ~(1 << 15)); } while(0)
 
+//************ MACROS TO RESET I2CX PERIPHERALS *****************//
+#define I2C1_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 21)); (RCC->APB1RSTR &= ~(1 << 21)); } while(0)
+#define I2C2_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 22)); (RCC->APB1RSTR &= ~(1 << 22)); } while(0)
+#define I2C3_REG_RESET()		do{ (RCC->APB1RSTR |= (1 << 23)); (RCC->AHB1RSTR &= ~(1 << 23)); } while(0)
+
 //***************** GET PORT CODE ********************//
 
 #define GPIO_BASEADDR_TO_CODE(x)   ((x == GPIOA) ? 0 :\
@@ -345,40 +354,92 @@ typedef struct {
 #define FLAG_SET		SET
 
 // Bit position definitions of SPI Peripheral
-#define SPI_CR1_CPHA		0
-#define SPI_CR1_CPOL		1
-#define SPI_CR1_MSTR		2
-#define SPI_CR1_BR			3
-#define SPI_CR1_SPE			6
-#define SPI_CR1_LSB_FIRST	7
-#define SPI_CR1_SSI			8
-#define SPI_CR1_SSM			9
-#define SPI_CR1_RX_ONLY		10
-#define SPI_CR1_DFF			11
-#define SPI_CR1_CRC_NEXT	12
-#define SPI_CR1_CRC_EN		13
-#define SPI_CR1_BIDI_OE		14
-#define SPI_CR1_BIDI_MODE	15
+#define SPI_CR1_CPHA			0
+#define SPI_CR1_CPOL			1
+#define SPI_CR1_MSTR			2
+#define SPI_CR1_BR				3
+#define SPI_CR1_SPE				6
+#define SPI_CR1_LSB_FIRST		7
+#define SPI_CR1_SSI				8
+#define SPI_CR1_SSM				9
+#define SPI_CR1_RX_ONLY			10
+#define SPI_CR1_DFF				11
+#define SPI_CR1_CRC_NEXT		12
+#define SPI_CR1_CRC_EN			13
+#define SPI_CR1_BIDI_OE			14
+#define SPI_CR1_BIDI_MODE		15
 
-#define SPI_CR2_RXDMAEN		0
-#define SPI_CR2_TXDMAEN		1
-#define SPI_CR2_SSOE		2
-#define SPI_CR2_FRF			4
-#define SPI_CR2_ERRIE		5
-#define SPI_CR2_RXNEIE		6
-#define SPI_CR2_TXEIE		7
+#define SPI_CR2_RXDMAEN			0
+#define SPI_CR2_TXDMAEN			1
+#define SPI_CR2_SSOE			2
+#define SPI_CR2_FRF				4
+#define SPI_CR2_ERRIE			5
+#define SPI_CR2_RXNEIE			6
+#define SPI_CR2_TXEIE			7
 
-#define SPI_SR_RXNE			0
-#define SPI_SR_TXE			1
-#define SPI_SR_CHSIDE		2
-#define SPI_SR_UDR			3
-#define SPI_SR_CRC_ERR		4
-#define SPI_SR_MODF			5
-#define SPI_SR_OVR			6
-#define SPI_SR_BSY			7
-#define SPI_SR_FRE			8
+#define SPI_SR_RXNE				0
+#define SPI_SR_TXE				1
+#define SPI_SR_CHSIDE			2
+#define SPI_SR_UDR				3
+#define SPI_SR_CRC_ERR			4
+#define SPI_SR_MODF				5
+#define SPI_SR_OVR				6
+#define SPI_SR_BSY				7
+#define SPI_SR_FRE				8
+
+// Bit position definitions of I2C Peripheral
+#define I2C_CR1_PE				0
+#define I2C_CR1_SMBUS			1
+#define I2C_CR1_SMB_TYPE		3
+#define I2C_CR1_ENARP			4
+#define I2C_CR1_ENPEC			5
+#define I2C_CR1_ENGC			6
+#define I2C_CR1_NO_STRETCH		7
+#define I2C_CR1_START			8
+#define I2C_CR1_STOP			9
+#define I2C_CR1_ACK				10
+#define I2C_CR1_POS				11
+#define I2C_CR1_PEC				12
+#define I2C_CR1_ALERT			13
+#define I2C_CR1_SWRST			15
+
+#define I2C_CR2_FREQ			0
+#define I2C_CR2_ITERREN			8
+#define I2C_CR2_ITEVTEN			9
+#define I2C_CR2_ITBUFEN			10
+#define I2C_CR2_DMAEN			11
+#define I2C_CR2_LAST			12
+
+#define I2C_SR1_SB				0
+#define I2C_SR1_ADDR			1
+#define I2C_SR1_BTF				2
+#define I2C_SR1_ADD10			3
+#define I2C_SR1_STOPF			4
+#define I2C_SR1_RxNE			6
+#define I2C_SR1_TxE				7
+#define I2C_SR1_BERR			8
+#define I2C_SR1_ARLO			9
+#define I2C_SR1_AF				10
+#define I2C_SR1_OVR				11
+#define I2C_SR1_PEC_ERR			12
+#define I2C_SR1_TIME_OUT		14
+#define I2C_SR1_SMB_ALERT		15
+
+#define I2C_SR2_MSL				0
+#define I2C_SR2_BUSY			1
+#define I2C_SR2_TRA				2
+#define I2C_SR2_GEN_CALL		3
+#define I2C_SR2_SMBDE_FAULT		5
+#define I2C_SR2_SMB_HOST		6
+#define I2C_SR2_DUALF			7
+#define I2C_SR2_PEC				8
+
+#define I2C_CCR_CCR				0
+#define I2C_CCR_DUTY			14
+#define I2C_CCR_FS				15
 
 #include "stm32407xx_gpio_driver.h"
 #include "stm32407xx_spi_driver.h"
+#include "stm32f407xx_i2c_driver.h"
 
 #endif /* INC_STM32F407XX_H_ */

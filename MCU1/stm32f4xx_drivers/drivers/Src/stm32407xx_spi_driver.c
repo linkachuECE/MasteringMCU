@@ -104,7 +104,7 @@ void SPI_Init(SPI_Handle_t *pSPIHandle){
 }
 
 /*****************************************************************
- * @fn			- GPIO_DeInit
+ * @fn			- SPI_DeInit
  *
  * @brief		- This function resets a SPI peripheral
  *

@@ -1,4 +1,4 @@
-19:50:22 **** Incremental Build of configuration Debug for project 005HSEMeasurement ****
+22:00:01 **** Build of configuration Debug for project 005HSEMeasurement ****
 make -j16 all 
 arm-none-eabi-size   005HSEMeasurement.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size   005HSEMeasurement.elf
 Finished building: default.size.stdout
  
 
-19:50:23 Build Finished. 0 errors, 0 warnings. (took 478ms)
+22:00:02 Build Finished. 0 errors, 0 warnings. (took 675ms)
 
