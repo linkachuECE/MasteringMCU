@@ -39,6 +39,56 @@ void I2C_PeriClockControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi){
 	}
 }
 
+// NOT USED IN THIS COURSE
+uint32_t RCC_GetOutputClock(void){
+	return 0;
+}
+
+uint16_t AHBPreScaler[9] = {2,4,8,16,32,64,128,256,512};
+uint16_t APB1PreScaler[4] = {2,4,8,16};
+
+uint32_t RCC_GetPCLK1Value(void){
+	uint32_t pclk1, systemClk;
+	uint16_t ahbp, apb1p;
+	uint8_t clkSrc, temp;
+
+	// Find where the clock source is coming from
+	clkSrc = (RCC->CFGR >> 2) & 0b11;
+
+	// If clock source is HSI
+	if(clkSrc == 0){
+		systemClk = 16000000;
+	// If clock source is HSE
+	} else if (clkSrc == 1){
+		systemClk = 8000000;
+	// If clock source is PLL (Not used in this course)
+	} else if (clkSrc == 2){
+		systemClk = RCC_GetOutputClock();
+	}
+
+	// Get the value for the AHB clock prescaler
+	temp =  (RCC->CFGR >> 4) & 0b1111;
+
+	if (temp < 0b1000)
+		ahbp = 1;
+	else
+		ahbp = AHBPreScaler[temp - 0b1000];
+
+	// Get the value for the APB1 prescaler
+	temp = 0;
+	temp = (RCC->CFGR >> 10) & 0b111;
+
+	if (temp < 0b100)
+		apb1p = 1;
+	else
+		apb1p = APB1PreScaler[temp - 0b100];
+
+	pclk1 = systemClk / (ahbp * apb1p);
+
+	return pclk1;
+}
+
+
 /*****************************************************************
  * @fn			- I2C_Init
  *
@@ -51,6 +101,10 @@ void I2C_PeriClockControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi){
  * @Note		- none
  */
 void I2C_Init(I2C_Handle_t *pI2CHandle){
+	uint32_t tempreg = 0;
+
+	tempreg |= pI2CHandle->I2C_Config.AckControl;
+
 
 }
 
