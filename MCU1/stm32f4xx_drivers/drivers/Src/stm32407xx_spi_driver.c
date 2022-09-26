@@ -99,8 +99,6 @@ void SPI_Init(SPI_Handle_t *pSPIHandle){
 	tempreg |= (pSPIHandle->SPIConfig.FrameFormat << SPI_CR1_LSB_FIRST);
 
 	pSPIHandle->pSPIx->CR1 |= tempreg;
-
-	SPI_PeripheralControl(pSPIHandle->pSPIx, ENABLE);
 }
 
 /*****************************************************************

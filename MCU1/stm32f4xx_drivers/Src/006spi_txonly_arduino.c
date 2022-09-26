@@ -8,8 +8,9 @@
 #include <string.h>
 #include <stdio.h>
 
-void delay(void){
-	for(uint32_t i = 0; i < 20000; i++);
+void delay(uint16_t ms){
+
+	for(uint32_t i = 0; i < (ms*1000); i++);
 }
 
 typedef struct {
@@ -62,32 +63,73 @@ void SPI2_Init(SPI_Handle_t* SPIDevice){
 	SPIDevice->pSPIx = SPI2;
 	SPIDevice->SPIConfig.BusConfig = SPI_BUS_CONFIG_FD;
 	SPIDevice->SPIConfig.DeviceMode = SPI_DEVICE_MODE_MASTER;
-	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV8;
+	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV16;
 	SPIDevice->SPIConfig.DFF = SPI_DFF_8BITS;
 	SPIDevice->SPIConfig.CPOL = SPI_CPOL_LOW;
 	SPIDevice->SPIConfig.CPHA = SPI_CPHA_FIRST;
 	SPIDevice->SPIConfig.SSM = SPI_SSM_HW;
-	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_LSBFIRST;
+	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_MSBFIRST;
 
 	SPI_Init(SPIDevice);
 }
 
+void USRBTN_Init(GPIO_Handle_t* USRPB){
+	USRPB->pGPIOx = GPIOA;
+	USRPB->GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
+	USRPB->GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_RT;
+	USRPB->GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+	USRPB->GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+
+	GPIO_Init(USRPB);
+}
+
+//Global variables for interrupt
+SPI_GPIO_Pins_t spi2Pins;
+SPI_Handle_t mySPIDevice;
+
+void sendMessage(){
+	char* myString = "I want to marry Janiyah";
+
+	SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
+
+	uint8_t messageLen = strlen(myString);
+
+	// First send the length
+	SPI_SendData(mySPIDevice.pSPIx, &messageLen, sizeof(uint8_t));
+	delay(1);
+
+	// Then send the message
+	SPI_SendData(mySPIDevice.pSPIx, (uint8_t*)myString, messageLen);
+
+	// Wait for busy flag to be reset
+	while(SPI_GetFlagStatus(SPI2, SPI_BSY_FLAG));
+
+	SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
+}
+
 int main(void){
 
-	SPI_GPIO_Pins_t spi2Pins;
 	SPI2_GPIO_Inits(&spi2Pins);
-
-	SPI_Handle_t mySPIDevice;
 	SPI2_Init(&mySPIDevice);
 
-	uint16_t myData[] = {0x0000, 0x1111, 0x2222, 0x3333, 0x4444, 0x5555, 0x6666, 0x7777, 0x8888, 0x9999, 0xAAAA, 0xBBBB, 0xCCCC, 0xDDDD, 0xEEEE, 0xFFFF};
-	char* myString = "Hello it me";
+	// Enable SSOE (Slave Select Output Enable)
+	// This allows the NSS to be toggled every time
+	// we use SPI_PeripheralControl
+	SPI_SSOEControl(SPI2, ENABLE);
 
-	//SPI_SendData(mySPIDevice.pSPIx, myData, 10);
-	SPI_SendData(mySPIDevice.pSPIx, (uint8_t*)myString, strlen(myString));
-	SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
+	// Initialize user button
+	GPIO_Handle_t USRPB;
+	memset(&USRPB, 0, sizeof(USRPB));
+	USRBTN_Init(&USRPB);
 
-	while(1){
+	// Create interrupt for button:
+	GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, 1, ENABLE);
 
-	}
+	while(1);
+}
+
+void EXTI0_IRQHandler(void){
+	delay(200);
+	GPIO_IRQHandling(GPIO_PIN_NO_0);
+	sendMessage();
 }

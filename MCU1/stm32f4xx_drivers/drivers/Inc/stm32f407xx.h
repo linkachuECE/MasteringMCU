@@ -352,6 +352,8 @@ typedef struct {
 #define GPIO_PIN_RESET 	RESET
 #define FLAG_RESET 		RESET
 #define FLAG_SET		SET
+#define READ			SET
+#define WRITE			RESET
 
 // Bit position definitions of SPI Peripheral
 #define SPI_CR1_CPHA			0
@@ -409,6 +411,13 @@ typedef struct {
 #define I2C_CR2_ITBUFEN			10
 #define I2C_CR2_DMAEN			11
 #define I2C_CR2_LAST			12
+
+#define I2C_OAR1_ADD10			0
+#define I2C_OAR1_ADD7			1
+#define I2C_OAR1_ADD_MODE		15
+
+#define I2C_OAR2_ENDUAL			0
+#define I2C_OAR2_ADD2			1
 
 #define I2C_SR1_SB				0
 #define I2C_SR1_ADDR			1

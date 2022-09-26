@@ -4,6 +4,9 @@
  *  Created on: Sep 10, 2022
  *      Author: linkachu
  */
+
+extern void initialise_monitor_handles(void);
+
 #include "stm32f407xx.h"
 #include "stm32407xx_spi_driver.h"
 #include <string.h>
@@ -95,12 +98,12 @@ void SPI2_Init(SPI_Handle_t* SPIDevice){
 	SPIDevice->pSPIx = SPI2;
 	SPIDevice->SPIConfig.DeviceMode = SPI_DEVICE_MODE_MASTER;
 	SPIDevice->SPIConfig.BusConfig = SPI_BUS_CONFIG_FD;
-	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV2;
+	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV16;
 	SPIDevice->SPIConfig.DFF = SPI_DFF_8BITS;
 	SPIDevice->SPIConfig.CPOL = SPI_CPOL_LOW;
 	SPIDevice->SPIConfig.CPHA = SPI_CPHA_FIRST;
 	SPIDevice->SPIConfig.SSM = SPI_SSM_HW;
-	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_LSBFIRST;
+	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_MSBFIRST;
 
 	SPI_Init(SPIDevice);
 
@@ -162,6 +165,8 @@ void dummyReadDelayWrite(SPI_RegDef_t* pSPIx){
 }
 
 int main(void){
+	initialise_monitor_handles();
+
 	uint8_t dummy_read;
 	uint8_t dummy_write;
 
@@ -178,25 +183,27 @@ int main(void){
 	memset(&USRPB, 0, sizeof(USRPB));
 	USRBTN_Init(&USRPB);
 
-	SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
-
 	while(1){
 
 		uint8_t cmdCode;
 		uint8_t ackByte;
 		uint8_t args[2];
 
+		SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
+		printf("SPI Communication opened\n");
+
 		//******** 1. CMD_LED_CTRL *********** //
 		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
 		delay();
 
-		SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
 
-		printf("SPI Communication opened\n");
+		printf("Attempting to do COMMAND_LED_CTRL\n");
 
 		cmdCode = COMMAND_LED_CTRL;
 
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
+
+		printf("Ack Byte received from SPI: %#x\n", ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
 			args[0] = LED_PIN;
@@ -207,14 +214,17 @@ int main(void){
 			printf("LED_CTRL Executed\n");
 		}
 
-
 		//******** 2. CMD_SENSOR_READ *********** //
 		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
 		delay();
 
+		printf("Attempting to do COMMAND_SENSOR_READ\n");
+
 		cmdCode = COMMAND_SENSOR_READ;
 
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
+
+		printf("Ack Byte received from SPI: %#x\n", ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
 			args[0] = ANALOG_PIN0;
@@ -233,9 +243,12 @@ int main(void){
 		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
 		delay();
 
+		printf("Attempting to do COMMAND_LED_READ\n");
 		cmdCode = COMMAND_LED_READ;
 
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
+
+		printf("Ack Byte received from SPI: %#x\n", ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
 			args[0] = LED_PIN;
@@ -254,9 +267,13 @@ int main(void){
 		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
 		delay();
 
+		printf("Attempting to do COMMAND_PRINT\n");
+
 		cmdCode = COMMAND_PRINT;
 
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
+
+		printf("Ack Byte received from SPI: %#x\n", ackByte);
 
 		if(SPI_Verify_Response(ackByte)){
 			uint8_t message[] = "Test message";
@@ -279,14 +296,17 @@ int main(void){
 			printf("COMMAND_PRINT executed\n");
 		}
 
-
 		//******** 5. COMMAND_ID_READ *********** //
 		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
 		delay();
 
+		printf("Attempting to do COMMAND_ID_READ\n");
+
 		cmdCode = COMMAND_ID_READ;
 
 		SendCmdGetAckByte(mySPIDevice.pSPIx, &cmdCode, &ackByte);
+
+		printf("Ack Byte received from SPI: %#x\n", ackByte);
 
 		uint8_t ID[11];
 
@@ -305,7 +325,6 @@ int main(void){
 		delay();
 
 		while(SPI_GetFlagStatus(mySPIDevice.pSPIx, SPI_BSY_FLAG));
-
 		SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
 
 		printf("SPI Communication closed\n");

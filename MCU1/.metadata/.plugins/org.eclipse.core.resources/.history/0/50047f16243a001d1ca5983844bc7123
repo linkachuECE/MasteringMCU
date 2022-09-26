@@ -1,9 +1,0 @@
-/*
- * stm32f407xx_i2c_driver.c
- *
- *  Created on: Sep 21, 2022
- *      Author: linkachu
- */
-
-#include "stm32f407xx.h"
-#include "stm32f407xx_i2c_driver.h"
