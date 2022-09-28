@@ -1,0 +1,7 @@
+../Src/008I2C_Arduino.c:19:6:delay	24	static
+../Src/008I2C_Arduino.c:23:6:I2C1GPIOInit	16	static
+../Src/008I2C_Arduino.c:44:6:I2C1_Init	16	static
+../Src/008I2C_Arduino.c:54:6:USRBTN_Init	16	static
+../Src/008I2C_Arduino.c:64:6:sendMessage	16	static
+../Src/008I2C_Arduino.c:76:5:main	48	static
+../Src/008I2C_Arduino.c:91:6:EXTI0_IRQHandler	8	static

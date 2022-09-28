@@ -141,7 +141,7 @@ uint32_t RCC_GetPCLK1Value(void){
 	// System clock is PLL
 	else if (clksrc == 2){
 		// Not used in this course
-		systemClk = RCC_GetPLLOutputClock();
+		// systemClk = RCC_GetPLLOutputClock();
 	}
 
 	//AHB Prescaler starts at the fourth bit
@@ -227,6 +227,7 @@ void I2C_Init(I2C_Handle_t *pI2CHandle){
 
 	pI2CHandle->pI2Cx->TRISE =  (tempreg & 0x3F);
 
+	I2C_PeriClockControl(pI2CHandle->pI2Cx, ENABLE);
 }
 
 /*****************************************************************

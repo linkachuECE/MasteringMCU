@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value=""/>
+		<item key="selection" value="USRPB"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="USRPB"/>
 			<item value="speed_sm"/>
 			<item value="SPI_PeripheralControl"/>
 			<item value="SPI_SSOEControl"/>
@@ -22,9 +23,9 @@
 			<item value="-&gt;GPIO"/>
 			<item value="-&gt;"/>
 			<item value="SPI2_"/>
-			<item value="SPI2_MISO"/>
 		</list>
 		<list key="replacehistory">
+			<item value="pUSRPB"/>
 			<item value="I2C"/>
 			<item value=""/>
 			<item value="B13"/>
@@ -39,14 +40,13 @@
 			<item value="MISO"/>
 			<item value="tempreg"/>
 			<item value="SPI_"/>
-			<item value="LED1"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item key="DIALOG_X_ORIGIN" value="1891"/>
 		<item key="DIALOG_Y_ORIGIN" value="332"/>
-		<item key="DIALOG_WIDTH" value="322"/>
-		<item key="DIALOG_HEIGHT" value="391"/>
-		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+		<item key="DIALOG_WIDTH" value="363"/>
+		<item key="DIALOG_HEIGHT" value="437"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
 	</section>
 </section>

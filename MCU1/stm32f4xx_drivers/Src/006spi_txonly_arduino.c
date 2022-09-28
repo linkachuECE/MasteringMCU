@@ -9,7 +9,6 @@
 #include <stdio.h>
 
 void delay(uint16_t ms){
-
 	for(uint32_t i = 0; i < (ms*1000); i++);
 }
 
