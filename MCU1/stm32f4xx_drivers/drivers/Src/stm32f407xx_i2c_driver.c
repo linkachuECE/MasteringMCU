@@ -177,6 +177,8 @@ uint32_t RCC_GetPCLK1Value(void){
 void I2C_Init(I2C_Handle_t *pI2CHandle){
 	uint32_t tempreg = 0;
 
+	I2C_PeriClockControl(pI2CHandle->pI2Cx, ENABLE);
+
 	tempreg |= (pI2CHandle->I2C_Config.AckControl << 10);
 	pI2CHandle->pI2Cx->CR1 = tempreg;
 
@@ -226,8 +228,6 @@ void I2C_Init(I2C_Handle_t *pI2CHandle){
 	}
 
 	pI2CHandle->pI2Cx->TRISE =  (tempreg & 0x3F);
-
-	I2C_PeriClockControl(pI2CHandle->pI2Cx, ENABLE);
 }
 
 /*****************************************************************

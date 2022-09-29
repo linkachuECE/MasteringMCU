@@ -445,6 +445,7 @@ void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx){
 	// 1. Clear the ovr flag
 	dummy = pSPIx->DR;
 	dummy = pSPIx->SR;
+	(void)dummy;
 }
 
 /*****************************************************************

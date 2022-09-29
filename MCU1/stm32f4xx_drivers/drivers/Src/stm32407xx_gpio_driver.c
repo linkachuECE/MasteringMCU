@@ -144,8 +144,8 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 	pGPIOHandle->pGPIOx->PUPDR |= temp;
 	temp = 0;
 
-	if(pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_OUT){
-		// 4. Configure the output type
+	// 4. Configure the output type
+	if((pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_OUT) || (pGPIOHandle->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_ALTFN)){
 		temp = (pGPIOHandle->GPIO_PinConfig.GPIO_PinOPType << (pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber));
 		pGPIOHandle->pGPIOx->OTYPER &= ~(0x1 << pGPIOHandle->GPIO_PinConfig.GPIO_PinNumber); // clearing
 		pGPIOHandle->pGPIOx->OTYPER |= temp;
