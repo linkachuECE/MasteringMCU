@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_macro  00002be0  00000000  00000000  00020ef8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00001308  00000000  00000000  00023ad8  2**0
+ 18 .debug_line   000012f9  00000000  00000000  00023ad8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    00009309  00000000  00000000  00024de0  2**0
+ 19 .debug_str    0000930a  00000000  00000000  00024dd1  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000050  00000000  00000000  0002e0e9  2**0
+ 20 .comment      00000050  00000000  00000000  0002e0db  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00000b9c  00000000  00000000  0002e13c  2**2
+ 21 .debug_frame  00000b9c  00000000  00000000  0002e12c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -316,7 +316,7 @@ int _close(int file)
  800037e:	af00      	add	r7, sp, #0
  8000380:	6078      	str	r0, [r7, #4]
 	return -1;
- 8000382:	f04f 33ff 	mov.w	r3, #4294967295	; 0xffffffff
+ 8000382:	f04f 33ff 	mov.w	r3, #4294967295
 }
  8000386:	4618      	mov	r0, r3
  8000388:	370c      	adds	r7, #12
@@ -437,7 +437,7 @@ void *_sbrk(ptrdiff_t incr)
  8000412:	220c      	movs	r2, #12
  8000414:	601a      	str	r2, [r3, #0]
     return (void *)-1;
- 8000416:	f04f 33ff 	mov.w	r3, #4294967295	; 0xffffffff
+ 8000416:	f04f 33ff 	mov.w	r3, #4294967295
  800041a:	e009      	b.n	8000430 <_sbrk+0x54>
   }
 
@@ -702,7 +702,7 @@ Infinite_Loop:
  80005ac:	f000 f888 	bl	80006c0 <__swsetup_r>
  80005b0:	2800      	cmp	r0, #0
  80005b2:	d0dd      	beq.n	8000570 <_puts_r+0x40>
- 80005b4:	f04f 35ff 	mov.w	r5, #4294967295	; 0xffffffff
+ 80005b4:	f04f 35ff 	mov.w	r5, #4294967295
  80005b8:	6e63      	ldr	r3, [r4, #100]	; 0x64
  80005ba:	07da      	lsls	r2, r3, #31
  80005bc:	d405      	bmi.n	80005ca <_puts_r+0x9a>
@@ -818,7 +818,7 @@ Infinite_Loop:
  80006a4:	f000 f80c 	bl	80006c0 <__swsetup_r>
  80006a8:	2800      	cmp	r0, #0
  80006aa:	d0cb      	beq.n	8000644 <__swbuf_r+0x28>
- 80006ac:	f04f 37ff 	mov.w	r7, #4294967295	; 0xffffffff
+ 80006ac:	f04f 37ff 	mov.w	r7, #4294967295
  80006b0:	e7ea      	b.n	8000688 <__swbuf_r+0x6c>
  80006b2:	bf00      	nop
  80006b4:	08001570 	.word	0x08001570
@@ -850,7 +850,7 @@ Infinite_Loop:
  80006ee:	6033      	str	r3, [r6, #0]
  80006f0:	f042 0340 	orr.w	r3, r2, #64	; 0x40
  80006f4:	81a3      	strh	r3, [r4, #12]
- 80006f6:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+ 80006f6:	f04f 30ff 	mov.w	r0, #4294967295
  80006fa:	e03e      	b.n	800077a <__swsetup_r+0xba>
  80006fc:	4b25      	ldr	r3, [pc, #148]	; (8000794 <__swsetup_r+0xd4>)
  80006fe:	429c      	cmp	r4, r3
@@ -1035,7 +1035,7 @@ Infinite_Loop:
  8000886:	89a3      	ldrh	r3, [r4, #12]
  8000888:	f043 0340 	orr.w	r3, r3, #64	; 0x40
  800088c:	81a3      	strh	r3, [r4, #12]
- 800088e:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+ 800088e:	f04f 30ff 	mov.w	r0, #4294967295
  8000892:	e790      	b.n	80007b6 <__sflush_r+0x1a>
  8000894:	4407      	add	r7, r0
  8000896:	1a36      	subs	r6, r6, r0
@@ -1496,7 +1496,7 @@ Infinite_Loop:
  8000c94:	f000 fb68 	bl	8001368 <_sbrk_r>
  8000c98:	3001      	adds	r0, #1
  8000c9a:	d101      	bne.n	8000ca0 <sbrk_aligned+0x38>
- 8000c9c:	f04f 34ff 	mov.w	r4, #4294967295	; 0xffffffff
+ 8000c9c:	f04f 34ff 	mov.w	r4, #4294967295
  8000ca0:	4620      	mov	r0, r4
  8000ca2:	bd70      	pop	{r4, r5, r6, pc}
  8000ca4:	2000008c 	.word	0x2000008c
@@ -1681,7 +1681,7 @@ Infinite_Loop:
  8000e26:	6e6b      	ldr	r3, [r5, #100]	; 0x64
  8000e28:	07dc      	lsls	r4, r3, #31
  8000e2a:	d50e      	bpl.n	8000e4a <_vfiprintf_r+0x6a>
- 8000e2c:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+ 8000e2c:	f04f 30ff 	mov.w	r0, #4294967295
  8000e30:	b01d      	add	sp, #116	; 0x74
  8000e32:	e8bd 8ff0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, pc}
  8000e36:	4b7b      	ldr	r3, [pc, #492]	; (8001024 <_vfiprintf_r+0x244>)
@@ -1731,7 +1731,7 @@ Infinite_Loop:
  8000ea4:	2b00      	cmp	r3, #0
  8000ea6:	f000 80a2 	beq.w	8000fee <_vfiprintf_r+0x20e>
  8000eaa:	2300      	movs	r3, #0
- 8000eac:	f04f 32ff 	mov.w	r2, #4294967295	; 0xffffffff
+ 8000eac:	f04f 32ff 	mov.w	r2, #4294967295
  8000eb0:	e9cd 2305 	strd	r2, r3, [sp, #20]
  8000eb4:	f10a 0a01 	add.w	sl, sl, #1
  8000eb8:	9304      	str	r3, [sp, #16]
@@ -1798,7 +1798,7 @@ Infinite_Loop:
  8000f48:	9203      	str	r2, [sp, #12]
  8000f4a:	2b00      	cmp	r3, #0
  8000f4c:	bfb8      	it	lt
- 8000f4e:	f04f 33ff 	movlt.w	r3, #4294967295	; 0xffffffff
+ 8000f4e:	f04f 33ff 	movlt.w	r3, #4294967295
  8000f52:	3402      	adds	r4, #2
  8000f54:	9305      	str	r3, [sp, #20]
  8000f56:	f8df a0d8 	ldr.w	sl, [pc, #216]	; 8001030 <_vfiprintf_r+0x250>
@@ -1969,7 +1969,7 @@ Infinite_Loop:
  80010de:	47c0      	blx	r8
  80010e0:	3001      	adds	r0, #1
  80010e2:	d103      	bne.n	80010ec <_printf_common+0xac>
- 80010e4:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+ 80010e4:	f04f 30ff 	mov.w	r0, #4294967295
  80010e8:	e8bd 87f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, pc}
  80010ec:	3501      	adds	r5, #1
  80010ee:	e7c6      	b.n	800107e <_printf_common+0x3e>
@@ -2117,7 +2117,7 @@ Infinite_Loop:
  800125c:	bfde      	ittt	le
  800125e:	2330      	movle	r3, #48	; 0x30
  8001260:	f805 3c01 	strble.w	r3, [r5, #-1]
- 8001264:	f105 35ff 	addle.w	r5, r5, #4294967295	; 0xffffffff
+ 8001264:	f105 35ff 	addle.w	r5, r5, #4294967295
  8001268:	1b52      	subs	r2, r2, r5
  800126a:	6122      	str	r2, [r4, #16]
  800126c:	f8cd a000 	str.w	sl, [sp]
@@ -2128,7 +2128,7 @@ Infinite_Loop:
  8001278:	f7ff fee2 	bl	8001040 <_printf_common>
  800127c:	3001      	adds	r0, #1
  800127e:	d14c      	bne.n	800131a <_printf_i+0x1fe>
- 8001280:	f04f 30ff 	mov.w	r0, #4294967295	; 0xffffffff
+ 8001280:	f04f 30ff 	mov.w	r0, #4294967295
  8001284:	b004      	add	sp, #16
  8001286:	e8bd 87f0 	ldmia.w	sp!, {r4, r5, r6, r7, r8, r9, sl, pc}
  800128a:	4835      	ldr	r0, [pc, #212]	; (8001360 <_printf_i+0x244>)

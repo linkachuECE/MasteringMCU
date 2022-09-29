@@ -8,4 +8,5 @@
 ../drivers/Src/stm32f407xx_i2c_driver.c:244:6:I2C_DeInit	16	static
 ../drivers/Src/stm32f407xx_i2c_driver.c:267:9:I2C_GetSR1FlagStatus	16	static
 ../drivers/Src/stm32f407xx_i2c_driver.c:289:6:I2C_MasterSendData	32	static
-../drivers/Src/stm32f407xx_i2c_driver.c:337:6:I2C_PeripheralControl	16	static
+../drivers/Src/stm32f407xx_i2c_driver.c:339:6:I2C_MasterReceiveData	24	static
+../drivers/Src/stm32f407xx_i2c_driver.c:370:6:I2C_PeripheralControl	16	static

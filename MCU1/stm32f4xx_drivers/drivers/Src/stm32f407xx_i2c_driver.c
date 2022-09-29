@@ -274,7 +274,7 @@ uint8_t I2C_GetSR1FlagStatus(I2C_RegDef_t *pI2Cx, uint32_t flagName){
 /*****************************************************************
  * @fn			- I2C_MasterSendData
  *
- * @brief		- This function send data via I2C
+ * @brief		- This function sends data via I2C
  *
  * @param[in]	- Pointer to I2C Handle
  * @param[in]	- Pointer to data buffer
@@ -321,6 +321,39 @@ void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t l
 	I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
 
 }
+
+/*****************************************************************
+ * @fn			- I2C_MasterReceiveData
+ *
+ * @brief		- This function receives data via I2C
+ *
+ * @param[in]	- Pointer to I2C Handle
+ * @param[in]	- Pointer to data buffer
+ * @param[in]	- Length of Rx buffer
+ * @param[in]	- Address of slave to receive data from
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t len, uint8_t slaveAddr){
+	// 1. Generate start condition
+	I2C_GenerateStartCondition(pI2CHandle->pI2Cx);
+
+	// 2. Confirm that start generation is completed by checking the SB flag in the SR1
+	// Note: Until SB is cleared SCL will be stretched
+	while (I2C_GetSR1FlagStatus(pI2CHandle->pI2Cx, I2C_SB_FLAG) == FLAG_RESET);
+
+	// 3. Send slave address
+	I2C_ExecuteAddressPhase(pI2CHandle->pI2Cx, slaveAddr, READ);
+
+	// 4. Confirm that Ack bit is received by checking addr bit
+
+
+	//  Generate stop condition
+	I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
+}
+
 
 /*****************************************************************
  * @fn			- I2C_PeripheralControl
