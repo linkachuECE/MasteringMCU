@@ -348,11 +348,6 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_
 	I2C_ExecuteAddressPhase(pI2CHandle->pI2Cx, slaveAddr, READ);
 
 	// 4. Confirm that Ack bit is received by checking addr bit
-	while (I2C_GetSR1FlagStatus(pI2CHandle->pI2Cx, I2C_ADDR_FLAG) == FLAG_RESET);
-
-	// 5. Clear the ADDR flag to allow for the data to be received
-	I2C_ClearADDRFlag(pI2CHandle->pI2Cx);
-
 
 
 	//  Generate stop condition
