@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="GPIO_PinOPType"/>
+		<item key="selection" value="I2C_MasterReceive"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="i2c_masterreceive"/>
+			<item value="I2C_MasterSendData"/>
+			<item value="I2C_PeripheralControl"/>
 			<item value="GPIO_PinOPType"/>
 			<item value="GPIO_PinPuPdControl"/>
 			<item value="GPIO_OP_TYPE_OD"/>
@@ -20,9 +23,6 @@
 			<item value="I2C"/>
 			<item value="D13"/>
 			<item value="LED6"/>
-			<item value="LED3"/>
-			<item value="mySPIDevice."/>
-			<item value=".GPIO"/>
 		</list>
 		<list key="replacehistory">
 			<item value="pUSRPB"/>
@@ -43,8 +43,8 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="646"/>
-		<item key="DIALOG_Y_ORIGIN" value="402"/>
+		<item key="DIALOG_X_ORIGIN" value="461"/>
+		<item key="DIALOG_Y_ORIGIN" value="276"/>
 		<item key="DIALOG_WIDTH" value="322"/>
 		<item key="DIALOG_HEIGHT" value="391"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>

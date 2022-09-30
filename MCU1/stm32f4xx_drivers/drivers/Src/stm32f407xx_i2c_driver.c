@@ -272,6 +272,25 @@ uint8_t I2C_GetSR1FlagStatus(I2C_RegDef_t *pI2Cx, uint32_t flagName){
 }
 
 /*****************************************************************
+ * @fn			- I2C_ManageAcking
+ *
+ * @brief		- This static function sets the ACK or NACK bit for I2C reception
+ *
+ * @param[in]	- Pointer to I2C Peripheral base address
+ * @param[in]	- ACK or NACK
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t ackOrNack){
+	if(ackOrNack == I2C_ACK_ENABLE)
+		pI2Cx->CR1 |= (1 << I2C_CR1_ACK);
+	else
+		pI2Cx->CR1 &= ~(1 << I2C_CR1_ACK);
+}
+
+/*****************************************************************
  * @fn			- I2C_MasterSendData
  *
  * @brief		- This function sends data via I2C
@@ -280,13 +299,14 @@ uint8_t I2C_GetSR1FlagStatus(I2C_RegDef_t *pI2Cx, uint32_t flagName){
  * @param[in]	- Pointer to data buffer
  * @param[in]	- Length of data to send
  * @param[in]	- Address of slave to send data to
+ * @param[in]	- Repeated start
  *
  *
  * @return		- none
  *
  * @Note		- none
  */
-void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveAddr){
+void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveAddr, uint8_t sr){
 	// 1. Generate the START condition
 	I2C_GenerateStartCondition(pI2CHandle->pI2Cx);
 
@@ -318,7 +338,8 @@ void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t l
 
 	// 8. Generate STOP condition and master need not to wait for the completion of stop condition
 	//    Note: generating STOP automatically clears the BTF
-	I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
+	if (sr == I2C_DISABLE_RS)
+		I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
 
 }
 
@@ -336,7 +357,7 @@ void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t l
  *
  * @Note		- none
  */
-void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_t len, uint8_t slaveAddr){
+void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint32_t len, uint8_t slaveAddr, uint8_t sr){
 	// 1. Generate start condition
 	I2C_GenerateStartCondition(pI2CHandle->pI2Cx);
 
@@ -350,13 +371,51 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_
 	// 4. Confirm that Ack bit is received by checking addr bit
 	while (I2C_GetSR1FlagStatus(pI2CHandle->pI2Cx, I2C_ADDR_FLAG) == FLAG_RESET);
 
-	// 5. Clear the ADDR flag to allow for the data to be received
-	I2C_ClearADDRFlag(pI2CHandle->pI2Cx);
+	// Procedure to read only 1 byte from slave
+	if (len == 1){
+		// Disable ACKing
+		I2C_ManageAcking(pI2CHandle->pI2Cx, I2C_ACK_DISABLE);
 
+		// Clear the ADDR flag
+		I2C_ClearADDRFlag(pI2CHandle->pI2Cx);
 
+		// Wair until RxNE becomes 1
+		while(I2C_GetSR1FlagStatus(pI2CHandle->pI2Cx, I2C_RxNE_FLAG) == FLAG_RESET)
 
-	//  Generate stop condition
-	I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
+		// Generate STOP condition
+		if (sr == I2C_DISABLE_RS)
+			I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
+
+		// Read data into buffer
+		*pRxBuffer = (uint8_t)(pI2CHandle->pI2Cx->DR);
+	}
+	// Procedure to read multiple bytes from slave
+	else {
+		// Clear the ADDR flag
+		I2C_ClearADDRFlag(pI2CHandle->pI2Cx);
+
+		// Read the data until len becomes zero
+		for (uint32_t i = len; i > 0; i--){
+			// Wait until RXnE becomes 1
+			while (I2C_GetSR1FlagStatus(pI2CHandle->pI2Cx, I2C_ADDR_FLAG) == FLAG_RESET);
+
+			if(i == 2){ // if the last 2 bytes are remaining
+				// Clear the ack bit
+				I2C_ManageAcking(pI2CHandle->pI2Cx, I2C_ACK_DISABLE);
+
+				// Generate STOP condition
+				if (sr == I2C_DISABLE_RS)
+					I2C_GenerateStopCondition(pI2CHandle->pI2Cx);
+			}
+
+			// Read the data from data register into buffer and increment buffer
+			*(pRxBuffer++) = (uint8_t)(pI2CHandle->pI2Cx->DR);
+		}
+	}
+
+	// Re-enable ACKing
+	if(pI2CHandle->I2C_Config.AckControl == I2C_ACK_ENABLE)
+		I2C_ManageAcking(pI2CHandle->pI2Cx, I2C_ACK_ENABLE);
 }
 
 
@@ -372,9 +431,11 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxbuffer, uint32_
  *
  * @Note		- none
  */
-void I2C_PeripheralControl(I2C_RegDef_t * pI2Cx, uint8_t EnorDi){
-	if (EnorDi == ENABLE)
-		pI2Cx->CR1 |= (1 << I2C_CR1_PE);
+void I2C_PeripheralControl(I2C_Handle_t* pI2CHandle, uint8_t EnorDi){
+	if (EnorDi == ENABLE){
+		pI2CHandle->pI2Cx->CR1 |= (1 << I2C_CR1_PE);
+		I2C_ManageAcking(pI2CHandle->pI2Cx, pI2CHandle->I2C_Config.AckControl);
+	}
 	else
-		pI2Cx->CR1 &= ~(1 << I2C_CR1_PE);
+		pI2CHandle->pI2Cx->CR1 &= ~(1 << I2C_CR1_PE);
 }

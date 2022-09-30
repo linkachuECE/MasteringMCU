@@ -5,13 +5,13 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/008I2C_Arduino.c 
+../Src/009I2C_Arduino_Receive.c 
 
 OBJS += \
-./Src/008I2C_Arduino.o 
+./Src/009I2C_Arduino_Receive.o 
 
 C_DEPS += \
-./Src/008I2C_Arduino.d 
+./Src/009I2C_Arduino_Receive.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -21,7 +21,7 @@ Src/%.o Src/%.su: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/008I2C_Arduino.d ./Src/008I2C_Arduino.o ./Src/008I2C_Arduino.su
+	-$(RM) ./Src/009I2C_Arduino_Receive.d ./Src/009I2C_Arduino_Receive.o ./Src/009I2C_Arduino_Receive.su
 
 .PHONY: clean-Src
 
