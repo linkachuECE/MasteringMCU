@@ -59,8 +59,8 @@ all: main-build
 main-build: 005HSEMeasurement.elf secondary-outputs
 
 # Tool invocations
-005HSEMeasurement.elf 005HSEMeasurement.map: $(OBJS) $(USER_OBJS) C:\Users\ebraun\Desktop\MasteringMCU\MCU1\005HSEMeasurement\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "005HSEMeasurement.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ebraun\Desktop\MasteringMCU\MCU1\005HSEMeasurement\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="005HSEMeasurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+005HSEMeasurement.elf 005HSEMeasurement.map: $(OBJS) $(USER_OBJS) C:\Users\egbra\Desktop\MasteringMCU\MCU1\005HSEMeasurement\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "005HSEMeasurement.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\005HSEMeasurement\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="005HSEMeasurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

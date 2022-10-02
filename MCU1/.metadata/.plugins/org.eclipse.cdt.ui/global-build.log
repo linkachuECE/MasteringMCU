@@ -1,17 +1,163 @@
-17:19:07 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
-make -j4 all 
-arm-none-eabi-gcc "../drivers/Src/stm32407xx_gpio_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32407xx_gpio_driver.d" -MT"drivers/Src/stm32407xx_gpio_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32407xx_gpio_driver.o"
-arm-none-eabi-gcc "../drivers/Src/stm32407xx_spi_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32407xx_spi_driver.d" -MT"drivers/Src/stm32407xx_spi_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32407xx_spi_driver.o"
-arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
-arm-none-eabi-gcc "../Src/009I2C_Arduino_Receive.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/009I2C_Arduino_Receive.d" -MT"Src/009I2C_Arduino_Receive.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/009I2C_Arduino_Receive.o"
-arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ebraun\Desktop\MasteringMCU\MCU1\stm32f4xx_drivers\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+20:52:46 **** Clean-only build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 clean 
+rm -rf ./drivers/Src/stm32407xx_gpio_driver.d ./drivers/Src/stm32407xx_gpio_driver.o ./drivers/Src/stm32407xx_gpio_driver.su ./drivers/Src/stm32407xx_spi_driver.d ./drivers/Src/stm32407xx_spi_driver.o ./drivers/Src/stm32407xx_spi_driver.su ./drivers/Src/stm32f407xx_i2c_driver.d ./drivers/Src/stm32f407xx_i2c_driver.o ./drivers/Src/stm32f407xx_i2c_driver.su
+rm -rf ./Startup/startup_stm32f407vgtx.d ./Startup/startup_stm32f407vgtx.o
+rm -rf ./Src/009I2C_Arduino_Receive.d ./Src/009I2C_Arduino_Receive.o ./Src/009I2C_Arduino_Receive.su ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+rm -rf default.size.stdout stm32f4xx_drivers.elf stm32f4xx_drivers.list stm32f4xx_drivers.map
+ 
+20:52:46 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-gcc "../drivers/Src/stm32407xx_gpio_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32407xx_gpio_driver.d" -MT"drivers/Src/stm32407xx_gpio_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32407xx_gpio_driver.o"
+arm-none-eabi-gcc "../drivers/Src/stm32407xx_spi_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32407xx_spi_driver.d" -MT"drivers/Src/stm32407xx_spi_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32407xx_spi_driver.o"
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32f407vgtx.d" -MT"Startup/startup_stm32f407vgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32f407vgtx.o" "../Startup/startup_stm32f407vgtx.s"
+arm-none-eabi-gcc "../Src/010i2c_master_rx_testing_it.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/010i2c_master_rx_testing_it.d" -MT"Src/010i2c_master_rx_testing_it.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/010i2c_master_rx_testing_it.o"
+arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\stm32f4xx_drivers\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: stm32f4xx_drivers.elf
  
 arm-none-eabi-size   stm32f4xx_drivers.elf 
 arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
    text	   data	    bss	    dec	    hex	filename
-  10304	    144	   1768	  12216	   2fb8	stm32f4xx_drivers.elf
+  12240	    140	   1796	  14176	   3760	stm32f4xx_drivers.elf
 Finished building: default.size.stdout
  
 Finished building: stm32f4xx_drivers.list
+ 
+20:53:09 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12240	    140	   1796	  14176	   3760	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+20:55:17 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12240	    140	   1796	  14176	   3760	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+20:57:54 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12240	    140	   1796	  14176	   3760	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+20:58:36 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12240	    140	   1796	  14176	   3760	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+20:59:50 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12240	    140	   1796	  14176	   3760	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+21:02:48 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12240	    140	   1796	  14176	   3760	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+21:05:50 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
+arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\stm32f4xx_drivers\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: stm32f4xx_drivers.elf
+ 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
+   text	   data	    bss	    dec	    hex	filename
+  12244	    140	   1796	  14180	   3764	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+Finished building: stm32f4xx_drivers.list
+ 
+21:08:04 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
+arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\stm32f4xx_drivers\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: stm32f4xx_drivers.elf
+ 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
+   text	   data	    bss	    dec	    hex	filename
+  12256	    140	   1796	  14192	   3770	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+Finished building: stm32f4xx_drivers.list
+ 
+21:11:09 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
+arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\stm32f4xx_drivers\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: stm32f4xx_drivers.elf
+ 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
+   text	   data	    bss	    dec	    hex	filename
+  12252	    140	   1796	  14188	   376c	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+Finished building: stm32f4xx_drivers.list
+ 
+21:14:21 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
+../drivers/Src/stm32f407xx_i2c_driver.c: In function 'I2C_EV_IRQHandling':
+../drivers/Src/stm32f407xx_i2c_driver.c:612:11: warning: unused variable 'CR2' [-Wunused-variable]
+  612 |  uint32_t CR2 = pI2CHandle->pI2Cx->CR2;
+      |           ^~~
+arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\stm32f4xx_drivers\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: stm32f4xx_drivers.elf
+ 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
+   text	   data	    bss	    dec	    hex	filename
+  12264	    140	   1796	  14200	   3778	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+Finished building: stm32f4xx_drivers.list
+ 
+21:18:06 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/egbra/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
+arm-none-eabi-gcc -o "stm32f4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\stm32f4xx_drivers\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="stm32f4xx_drivers.map" -Wl,--gc-sections -static -specs=rdimon.specs -lc -lrdimon --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: stm32f4xx_drivers.elf
+ 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+arm-none-eabi-objdump -h -S  stm32f4xx_drivers.elf  > "stm32f4xx_drivers.list"
+   text	   data	    bss	    dec	    hex	filename
+  12232	    140	   1796	  14168	   3758	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+Finished building: stm32f4xx_drivers.list
+ 
+21:21:15 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12232	    140	   1796	  14168	   3758	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+21:22:14 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12232	    140	   1796	  14168	   3758	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
+ 
+21:25:51 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
+make -j16 all 
+arm-none-eabi-size   stm32f4xx_drivers.elf 
+   text	   data	    bss	    dec	    hex	filename
+  12232	    140	   1796	  14168	   3758	stm32f4xx_drivers.elf
+Finished building: default.size.stdout
  

@@ -1,4 +1,5 @@
-"./Src/009I2C_Arduino_Receive.o"
+"./Src/010i2c_master_rx_testing_it.o"
+"./Src/sysmem.o"
 "./Startup/startup_stm32f407vgtx.o"
 "./drivers/Src/stm32407xx_gpio_driver.o"
 "./drivers/Src/stm32407xx_spi_driver.o"
