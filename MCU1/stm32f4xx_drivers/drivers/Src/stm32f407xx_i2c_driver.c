@@ -447,6 +447,36 @@ void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint32_
 		I2C_ManageAcking(pI2CHandle->pI2Cx, I2C_ACK_ENABLE);
 }
 
+/*****************************************************************
+ * @fn			- I2C_SlaveSendData
+ *
+ * @brief		- This function sends data via I2C in slave mode
+ *
+ * @param[in]	- Pointer to base address of I2C peripheral
+ * @param[in]	- Data to send
+ *
+ * @return		- Data received
+ *
+ * @Note		- none
+ */
+void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data){
+	pI2Cx->DR = data;
+}
+
+/*****************************************************************
+ * @fn			- I2C_SlaveReceiveData
+ *
+ * @brief		- This function receives data via I2C in slave mode
+ *
+ * @param[in]	- Pointer to base address of I2C peripheral
+ *
+ * @return		- Data received
+ *
+ * @Note		- none
+ */
+uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2Cx){
+	return (uint8_t)pI2Cx-DR;
+}
 
 /*****************************************************************
  * @fn			- I2C_PeripheralControl
@@ -674,12 +704,18 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle){
 	temp3 = pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR1_TxE);
 	if (temp1 && temp2 && temp3){
 		// TXE flag is set
-		// Check for device mode to confirm that it is in master mode
+		// Check for device mode
 		if(pI2CHandle->pI2Cx->SR1 & (1 << I2C_SR2_MSL) ){
+			// Device is in master mode
 			// Data transmission
 			if(pI2CHandle->TxRxState == I2C_BUSY_IN_TX){
 				I2C_MasterHandleTXEInterrupt(pI2CHandle);
 			}
+		} else {
+			// Device is in slave mode
+			// Make sure that the slave is in transmitter mode
+			if(pI2CHandle->pI2Cx->SR2 & (1 << I2C_SR2_TRA))
+				I2C_ApplicationEventCallback(pI2CHandle, I2C_EV_DATA_REQ);
 		}
 	}
 
@@ -689,11 +725,16 @@ void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle){
 	if (temp1 && temp2 && temp3){
 		// Check device mode
 		if(pI2CHandle->pI2Cx->SR2 & (1 << I2C_SR2_MSL)){
+			// Device is in master mode
 			// RXNE flag is set
 			if(pI2CHandle->TxRxState == I2C_BUSY_IN_RX){
 				// Currently receiving
 				I2C_MasterHandleRXNEInterrupt(pI2CHandle);
 			}
+		} else {
+			// Device is in slave mode
+			if(!(pI2CHandle->pI2Cx->SR2 & (1 << I2C_SR2_TRA)))
+				I2C_ApplicationEventCallback(pI2CHandle, I2C_EV_DATA_RCV);
 		}
 	}
 }
@@ -744,7 +785,7 @@ void I2C_ER_IRQHandling(I2C_Handle_t *pI2CHandle)
 		I2C_ApplicationEventCallback(pI2CHandle, I2C_ERROR_ARLO);
 	}
 
-/***********************Check for ACK failure  error************************************/
+/***********************Check for ACK failure error************************************/
 
 	temp1 = (pI2CHandle->pI2Cx->SR1) & ( 1 << I2C_SR1_AF);
 	if(temp1  && temp2)

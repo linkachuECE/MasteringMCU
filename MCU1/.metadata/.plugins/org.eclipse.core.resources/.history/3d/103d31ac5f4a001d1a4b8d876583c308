@@ -1,0 +1,66 @@
+/*
+ * stm32f407xx_usart_driver.c
+ *
+ *  Created on: Oct 12, 2022
+ *      Author: ebraun
+ */
+
+/*****************************************************************
+ * @fn			- USART_PeriClockControl
+ *
+ * @brief		- This function enables or disables peripheral clock for the given USART Peripheral
+ *
+ * @param[in]	- Base address of the USART peripheral
+ * @param[in]	- ENABLE or DISABLE macro
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void USART_PeriClockControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi){
+
+}
+
+/*****************************************************************
+ * @fn			- USART_PeripheralControl
+ *
+ * @brief		- This function enables or disables a USART peripheral
+ *
+ * @param[in]	- Pointer to USART peripheral base address
+ * @param[in]	- ENABLE or DISABLE macro
+ *
+ * @return		- none
+ *
+ * @Note		- none
+ */
+void USART_PeripheralControl(USART_RegDef_t *pUSARTx, uint8_t EnOrDi){
+
+}
+
+/*****************************************************************
+ * @fn			- USART_GetFlagStatus
+ *
+ * @brief		- This function returns the value currently held in a bit or field in a USART status register
+ *
+ * @param[in]	- Pointer to USART base address
+ * @param[in]	- Flag name macro
+ *
+ * @return		- SET or RESET
+ *
+ * @Note		- none
+ */
+uint8_t USART_GetFlagStatus(USART_RegDef_t* pUSARTx, uint8_t StatusFlagName){
+
+}
+
+
+void USART_ClearFlag(USART_RegDef_t *pUSARTx, uint16_t StatusFlagName){
+
+}
+
+void USART_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnOrDi){
+
+}
+void USART_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority){
+
+}

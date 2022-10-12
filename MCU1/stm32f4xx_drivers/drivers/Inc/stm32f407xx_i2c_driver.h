@@ -87,13 +87,15 @@ typedef struct{
 #define I2C_EV_TX_CMPLT			0
 #define I2C_EV_RX_CMPLT			1
 #define I2C_EV_STOP				2
+#define I2C_EV_DATA_REQ			3
+#define I2C_EV_DATA_RCV			4
 
 // I2C Error macros
-#define I2C_ERROR_BERR  		3
-#define I2C_ERROR_ARLO  		4
-#define I2C_ERROR_AF    		5
-#define I2C_ERROR_OVR   		6
-#define I2C_ERROR_TIMEOUT 		7
+#define I2C_ERROR_BERR  		5
+#define I2C_ERROR_ARLO  		6
+#define I2C_ERROR_AF    		7
+#define I2C_ERROR_OVR   		8
+#define I2C_ERROR_TIMEOUT 		9
 
 // Peripheral clock setup
 void I2C_PeriClockControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
@@ -109,21 +111,19 @@ void I2C_PeripheralControl(I2C_Handle_t* pI2CHandle, uint8_t EnorDi);
 // Application callback
 void I2C_ApplicationEventCallback(I2C_Handle_t *pI2CHandle, uint8_t AppEv);
 
-// Data send and receive
+// Master data send and receive
 void I2C_ManageAcking(I2C_RegDef_t *pI2Cx, uint8_t ackOrNack);
 uint8_t I2C_GetSR1FlagStatus(I2C_RegDef_t *pI2Cx, uint32_t flagName);
 void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveAddr, uint8_t sr);
 void I2C_MasterReceiveData(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, uint32_t len, uint8_t slaveAddr, uint8_t sr);
 
+// Slave data send and receive
+void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data);
+uint8_t I2C_slaveReceiveData(I2C_RegDef_t *pI2Cx);
+
 // Generate start and stop condition
 void I2C_GenerateStartCondition(I2C_RegDef_t *pI2Cx);
 void I2C_GenerateStopCondition(I2C_RegDef_t *pI2Cx);
-
-// IRQ Configuration and ISR Handling
-void I2C_IRQInterruptConfig(uint8_t IRQNumber, uint32_t IRQPriority, uint8_t EnorDi);
-void I2C_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
-void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle);
-void I2C_ER_IRQHandling(I2C_Handle_t *pI2CHandle);
 
 // Interrupt send and receive
 uint8_t I2C_MasterSendDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pTxbuffer, uint32_t len, uint8_t slaveAddr, uint8_t sr);
@@ -132,5 +132,15 @@ uint8_t I2C_MasterReceiveDataIT(I2C_Handle_t *pI2CHandle, uint8_t *pRxBuffer, ui
 // Closing data communications
 void I2C_CloseSendData(I2C_Handle_t *pI2CHandle);
 void I2C_CloseReceiveData(I2C_Handle_t *pI2CHandle);
+
+// I2C Slave functions
+void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data);
+uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2Cx);
+
+// IRQ Configuration and ISR Handling
+void I2C_IRQInterruptConfig(uint8_t IRQNumber, uint32_t IRQPriority, uint8_t EnorDi);
+void I2C_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
+void I2C_EV_IRQHandling(I2C_Handle_t *pI2CHandle);
+void I2C_ER_IRQHandling(I2C_Handle_t *pI2CHandle);
 
 #endif /* INC_STM32F407XX_I2C_DRIVER_H_ */

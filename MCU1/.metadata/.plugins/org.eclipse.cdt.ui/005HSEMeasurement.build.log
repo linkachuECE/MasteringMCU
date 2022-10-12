@@ -1,6 +1,6 @@
-20:07:34 **** Build of configuration Debug for project 005HSEMeasurement ****
-make -j16 all 
-arm-none-eabi-gcc -o "005HSEMeasurement.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\egbra\Desktop\MasteringMCU\MCU1\005HSEMeasurement\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="005HSEMeasurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+14:51:57 **** Build of configuration Debug for project 005HSEMeasurement ****
+make -j4 all 
+arm-none-eabi-gcc -o "005HSEMeasurement.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\ebraun\Desktop\MasteringMCU\MCU1\005HSEMeasurement\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="005HSEMeasurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: 005HSEMeasurement.elf
  
 arm-none-eabi-size   005HSEMeasurement.elf 
@@ -12,5 +12,5 @@ Finished building: default.size.stdout
 Finished building: 005HSEMeasurement.list
  
 
-20:07:34 Build Finished. 0 errors, 0 warnings. (took 538ms)
+14:51:58 Build Finished. 0 errors, 0 warnings. (took 825ms)
 

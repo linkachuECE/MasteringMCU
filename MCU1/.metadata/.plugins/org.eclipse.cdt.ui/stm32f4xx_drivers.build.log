@@ -1,10 +1,30 @@
-21:25:51 **** Incremental Build of configuration Debug for project stm32f4xx_drivers ****
-make -j16 all 
-arm-none-eabi-size   stm32f4xx_drivers.elf 
-   text	   data	    bss	    dec	    hex	filename
-  12232	    140	   1796	  14168	   3758	stm32f4xx_drivers.elf
-Finished building: default.size.stdout
- 
+14:51:58 **** Build of configuration Debug for project stm32f4xx_drivers ****
+make -j4 all 
+arm-none-eabi-gcc "../drivers/Src/stm32407xx_gpio_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32407xx_gpio_driver.d" -MT"drivers/Src/stm32407xx_gpio_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32407xx_gpio_driver.o"
+arm-none-eabi-gcc "../drivers/Src/stm32407xx_spi_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32407xx_spi_driver.d" -MT"drivers/Src/stm32407xx_spi_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32407xx_spi_driver.o"
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_i2c_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_i2c_driver.d" -MT"drivers/Src/stm32f407xx_i2c_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_i2c_driver.o"
+arm-none-eabi-gcc "../drivers/Src/stm32f407xx_usart_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -I"C:/Users/ebraun/Desktop/MasteringMCU/MCU1/stm32f4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"drivers/Src/stm32f407xx_usart_driver.d" -MT"drivers/Src/stm32f407xx_usart_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32f407xx_usart_driver.o"
+../drivers/Src/stm32f407xx_usart_driver.c: In function 'USART_IRQInterruptConfig':
+../drivers/Src/stm32f407xx_usart_driver.c:120:6: error: 'EnorDi' undeclared (first use in this function); did you mean 'EnOrDi'?
+  120 |  if (EnorDi == ENABLE){
+      |      ^~~~~~
+      |      EnOrDi
+../drivers/Src/stm32f407xx_usart_driver.c:120:6: note: each undeclared identifier is reported only once for each function it appears in
+make: *** [drivers/Src/subdir.mk:28: drivers/Src/stm32f407xx_usart_driver.o] Error 1
+make: *** Waiting for unfinished jobs....
+../drivers/Src/stm32f407xx_i2c_driver.c: In function 'I2C_SlaveReceiveData':
+../drivers/Src/stm32f407xx_i2c_driver.c:478:9: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+  478 |  return (uint8_t)pI2Cx-DR;
+      |         ^
+../drivers/Src/stm32f407xx_i2c_driver.c:478:24: error: 'DR' undeclared (first use in this function)
+  478 |  return (uint8_t)pI2Cx-DR;
+      |                        ^~
+../drivers/Src/stm32f407xx_i2c_driver.c:478:24: note: each undeclared identifier is reported only once for each function it appears in
+../drivers/Src/stm32f407xx_i2c_driver.c:479:1: warning: control reaches end of non-void function [-Wreturn-type]
+  479 | }
+      | ^
+make: *** [drivers/Src/subdir.mk:28: drivers/Src/stm32f407xx_i2c_driver.o] Error 1
+"make -j4 all" terminated with exit code 2. Build might be incomplete.
 
-21:25:51 Build Finished. 0 errors, 0 warnings. (took 315ms)
+14:52:01 Build Failed. 5 errors, 2 warnings. (took 2s.662ms)
 

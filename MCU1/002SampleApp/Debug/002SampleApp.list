@@ -139,14 +139,24 @@ Disassembly of section .text:
  800028e:	bf00      	nop
 
 08000290 <array_fill_numbers>:
+int numbers[] = { 456,345,678,567,890,456,3456,123,765,456,896,456,678,987,000,145,90};
+
+int  someData = 90;
+
+void array_fill_numbers(int pNumbers[], unsigned int len)
+{
  8000290:	b580      	push	{r7, lr}
  8000292:	b084      	sub	sp, #16
  8000294:	af00      	add	r7, sp, #0
  8000296:	6078      	str	r0, [r7, #4]
  8000298:	6039      	str	r1, [r7, #0]
+
+    for ( unsigned int i = 0 ; i < len ; i++)
  800029a:	2300      	movs	r3, #0
  800029c:	60fb      	str	r3, [r7, #12]
  800029e:	e015      	b.n	80002cc <array_fill_numbers+0x3c>
+    {
+        pNumbers[i] = rand() % 1000;
  80002a0:	f000 fa8c 	bl	80007bc <rand>
  80002a4:	4602      	mov	r2, r0
  80002a6:	68fb      	ldr	r3, [r7, #12]
@@ -162,6 +172,7 @@ Disassembly of section .text:
  80002be:	fb00 f303 	mul.w	r3, r0, r3
  80002c2:	1ad3      	subs	r3, r2, r3
  80002c4:	600b      	str	r3, [r1, #0]
+    for ( unsigned int i = 0 ; i < len ; i++)
  80002c6:	68fb      	ldr	r3, [r7, #12]
  80002c8:	3301      	adds	r3, #1
  80002ca:	60fb      	str	r3, [r7, #12]
@@ -169,6 +180,9 @@ Disassembly of section .text:
  80002ce:	683b      	ldr	r3, [r7, #0]
  80002d0:	429a      	cmp	r2, r3
  80002d2:	d3e5      	bcc.n	80002a0 <array_fill_numbers+0x10>
+    }
+
+}
  80002d4:	bf00      	nop
  80002d6:	bf00      	nop
  80002d8:	3710      	adds	r7, #16
@@ -178,18 +192,26 @@ Disassembly of section .text:
  80002e0:	10624dd3 	.word	0x10624dd3
 
 080002e4 <display_numbers>:
+
+void display_numbers(int *pNumbers, unsigned int len, char *pMessage)
+{
  80002e4:	b580      	push	{r7, lr}
  80002e6:	b086      	sub	sp, #24
  80002e8:	af00      	add	r7, sp, #0
  80002ea:	60f8      	str	r0, [r7, #12]
  80002ec:	60b9      	str	r1, [r7, #8]
  80002ee:	607a      	str	r2, [r7, #4]
+    printf("%s",pMessage);
  80002f0:	6879      	ldr	r1, [r7, #4]
  80002f2:	480e      	ldr	r0, [pc, #56]	; (800032c <display_numbers+0x48>)
  80002f4:	f000 fa36 	bl	8000764 <iprintf>
+
+    for (unsigned i = 0 ; i < len ; i++)
  80002f8:	2300      	movs	r3, #0
  80002fa:	617b      	str	r3, [r7, #20]
  80002fc:	e00b      	b.n	8000316 <display_numbers+0x32>
+    {
+        printf("%5d  ",pNumbers[i]);
  80002fe:	697b      	ldr	r3, [r7, #20]
  8000300:	009b      	lsls	r3, r3, #2
  8000302:	68fa      	ldr	r2, [r7, #12]
@@ -198,6 +220,7 @@ Disassembly of section .text:
  8000308:	4619      	mov	r1, r3
  800030a:	4809      	ldr	r0, [pc, #36]	; (8000330 <display_numbers+0x4c>)
  800030c:	f000 fa2a 	bl	8000764 <iprintf>
+    for (unsigned i = 0 ; i < len ; i++)
  8000310:	697b      	ldr	r3, [r7, #20]
  8000312:	3301      	adds	r3, #1
  8000314:	617b      	str	r3, [r7, #20]
@@ -205,8 +228,12 @@ Disassembly of section .text:
  8000318:	68bb      	ldr	r3, [r7, #8]
  800031a:	429a      	cmp	r2, r3
  800031c:	d3ef      	bcc.n	80002fe <display_numbers+0x1a>
+    }
+
+    printf("\n");
  800031e:	200a      	movs	r0, #10
  8000320:	f000 fa38 	bl	8000794 <putchar>
+}
  8000324:	bf00      	nop
  8000326:	3718      	adds	r7, #24
  8000328:	46bd      	mov	sp, r7
@@ -215,24 +242,38 @@ Disassembly of section .text:
  8000330:	080018c8 	.word	0x080018c8
 
 08000334 <swap_numbers>:
+
+
+void swap_numbers(int *x,int *y)
+{
  8000334:	b480      	push	{r7}
  8000336:	b085      	sub	sp, #20
  8000338:	af00      	add	r7, sp, #0
  800033a:	6078      	str	r0, [r7, #4]
  800033c:	6039      	str	r1, [r7, #0]
+     int temp=*x;
  800033e:	687b      	ldr	r3, [r7, #4]
  8000340:	681b      	ldr	r3, [r3, #0]
  8000342:	60fb      	str	r3, [r7, #12]
+     *x=*y;
  8000344:	683b      	ldr	r3, [r7, #0]
  8000346:	681a      	ldr	r2, [r3, #0]
  8000348:	687b      	ldr	r3, [r7, #4]
  800034a:	601a      	str	r2, [r3, #0]
+     *y=temp;
  800034c:	683b      	ldr	r3, [r7, #0]
  800034e:	68fa      	ldr	r2, [r7, #12]
  8000350:	601a      	str	r2, [r3, #0]
+     void (*jump_addr) (void);
+     jump_addr = (void*)0x20000008;
+     jump_addr();
+#endif
+
+     someData = 10;
  8000352:	4b04      	ldr	r3, [pc, #16]	; (8000364 <swap_numbers+0x30>)
  8000354:	220a      	movs	r2, #10
  8000356:	601a      	str	r2, [r3, #0]
+}
  8000358:	bf00      	nop
  800035a:	3714      	adds	r7, #20
  800035c:	46bd      	mov	sp, r7
@@ -242,21 +283,35 @@ Disassembly of section .text:
  8000364:	20000044 	.word	0x20000044
 
 08000368 <bubble_sort>:
+
+
+void bubble_sort(int *pNumbers , unsigned int len)
+{
  8000368:	b580      	push	{r7, lr}
  800036a:	b086      	sub	sp, #24
  800036c:	af00      	add	r7, sp, #0
  800036e:	6078      	str	r0, [r7, #4]
  8000370:	6039      	str	r1, [r7, #0]
+
+    int i,j,flag=0;
  8000372:	2300      	movs	r3, #0
  8000374:	60fb      	str	r3, [r7, #12]
+
+    for(i=0;i<len-1;i++)
  8000376:	2300      	movs	r3, #0
  8000378:	617b      	str	r3, [r7, #20]
  800037a:	e02f      	b.n	80003dc <bubble_sort+0x74>
+    {
+        flag=0;
  800037c:	2300      	movs	r3, #0
  800037e:	60fb      	str	r3, [r7, #12]
+
+        for(j=0;j<len-1-i;j++)
  8000380:	2300      	movs	r3, #0
  8000382:	613b      	str	r3, [r7, #16]
  8000384:	e01d      	b.n	80003c2 <bubble_sort+0x5a>
+        {
+            if(pNumbers[j] > pNumbers[j+1])
  8000386:	693b      	ldr	r3, [r7, #16]
  8000388:	009b      	lsls	r3, r3, #2
  800038a:	687a      	ldr	r2, [r7, #4]
@@ -270,6 +325,8 @@ Disassembly of section .text:
  800039a:	681b      	ldr	r3, [r3, #0]
  800039c:	429a      	cmp	r2, r3
  800039e:	dd0d      	ble.n	80003bc <bubble_sort+0x54>
+            {
+                swap_numbers(&pNumbers[j],&pNumbers[j+1]);
  80003a0:	693b      	ldr	r3, [r7, #16]
  80003a2:	009b      	lsls	r3, r3, #2
  80003a4:	687a      	ldr	r2, [r7, #4]
@@ -281,8 +338,10 @@ Disassembly of section .text:
  80003b0:	4413      	add	r3, r2
  80003b2:	4619      	mov	r1, r3
  80003b4:	f7ff ffbe 	bl	8000334 <swap_numbers>
+                flag=1;
  80003b8:	2301      	movs	r3, #1
  80003ba:	60fb      	str	r3, [r7, #12]
+        for(j=0;j<len-1-i;j++)
  80003bc:	693b      	ldr	r3, [r7, #16]
  80003be:	3301      	adds	r3, #1
  80003c0:	613b      	str	r3, [r7, #16]
@@ -293,9 +352,14 @@ Disassembly of section .text:
  80003ca:	693b      	ldr	r3, [r7, #16]
  80003cc:	429a      	cmp	r2, r3
  80003ce:	d8da      	bhi.n	8000386 <bubble_sort+0x1e>
+            }
+        }
+
+        if(flag==0)
  80003d0:	68fb      	ldr	r3, [r7, #12]
  80003d2:	2b00      	cmp	r3, #0
  80003d4:	d008      	beq.n	80003e8 <bubble_sort+0x80>
+    for(i=0;i<len-1;i++)
  80003d6:	697b      	ldr	r3, [r7, #20]
  80003d8:	3301      	adds	r3, #1
  80003da:	617b      	str	r3, [r7, #20]
@@ -304,32 +368,52 @@ Disassembly of section .text:
  80003e0:	697b      	ldr	r3, [r7, #20]
  80003e2:	429a      	cmp	r2, r3
  80003e4:	d8ca      	bhi.n	800037c <bubble_sort+0x14>
+            break;
+    }
+}
  80003e6:	e000      	b.n	80003ea <bubble_sort+0x82>
+            break;
  80003e8:	bf00      	nop
+}
  80003ea:	bf00      	nop
  80003ec:	3718      	adds	r7, #24
  80003ee:	46bd      	mov	sp, r7
  80003f0:	bd80      	pop	{r7, pc}
 
 080003f2 <insertion_sort>:
+
+void insertion_sort(int *pNumbers , unsigned int len)
+{
  80003f2:	b480      	push	{r7}
  80003f4:	b087      	sub	sp, #28
  80003f6:	af00      	add	r7, sp, #0
  80003f8:	6078      	str	r0, [r7, #4]
  80003fa:	6039      	str	r1, [r7, #0]
+
+     int i,j,num;
+
+     for(i=1 ; i<len ; i++)
  80003fc:	2301      	movs	r3, #1
  80003fe:	617b      	str	r3, [r7, #20]
  8000400:	e02c      	b.n	800045c <insertion_sort+0x6a>
+     {
+         j=i-1;
  8000402:	697b      	ldr	r3, [r7, #20]
  8000404:	3b01      	subs	r3, #1
  8000406:	613b      	str	r3, [r7, #16]
+
+         num = pNumbers[i];
  8000408:	697b      	ldr	r3, [r7, #20]
  800040a:	009b      	lsls	r3, r3, #2
  800040c:	687a      	ldr	r2, [r7, #4]
  800040e:	4413      	add	r3, r2
  8000410:	681b      	ldr	r3, [r3, #0]
  8000412:	60fb      	str	r3, [r7, #12]
+
+         while( (j>-1) && (pNumbers[j] > num) )
  8000414:	e00d      	b.n	8000432 <insertion_sort+0x40>
+         {
+             pNumbers[j+1] = pNumbers[j];
  8000416:	693b      	ldr	r3, [r7, #16]
  8000418:	009b      	lsls	r3, r3, #2
  800041a:	687a      	ldr	r2, [r7, #4]
@@ -341,9 +425,11 @@ Disassembly of section .text:
  8000426:	440b      	add	r3, r1
  8000428:	6812      	ldr	r2, [r2, #0]
  800042a:	601a      	str	r2, [r3, #0]
+             j--;
  800042c:	693b      	ldr	r3, [r7, #16]
  800042e:	3b01      	subs	r3, #1
  8000430:	613b      	str	r3, [r7, #16]
+         while( (j>-1) && (pNumbers[j] > num) )
  8000432:	693b      	ldr	r3, [r7, #16]
  8000434:	2b00      	cmp	r3, #0
  8000436:	db07      	blt.n	8000448 <insertion_sort+0x56>
@@ -355,6 +441,9 @@ Disassembly of section .text:
  8000442:	68fa      	ldr	r2, [r7, #12]
  8000444:	429a      	cmp	r2, r3
  8000446:	dbe6      	blt.n	8000416 <insertion_sort+0x24>
+         }
+
+         pNumbers[j+1]=num;
  8000448:	693b      	ldr	r3, [r7, #16]
  800044a:	3301      	adds	r3, #1
  800044c:	009b      	lsls	r3, r3, #2
@@ -362,6 +451,7 @@ Disassembly of section .text:
  8000450:	4413      	add	r3, r2
  8000452:	68fa      	ldr	r2, [r7, #12]
  8000454:	601a      	str	r2, [r3, #0]
+     for(i=1 ; i<len ; i++)
  8000456:	697b      	ldr	r3, [r7, #20]
  8000458:	3301      	adds	r3, #1
  800045a:	617b      	str	r3, [r7, #20]
@@ -369,6 +459,10 @@ Disassembly of section .text:
  800045e:	683a      	ldr	r2, [r7, #0]
  8000460:	429a      	cmp	r2, r3
  8000462:	d8ce      	bhi.n	8000402 <insertion_sort+0x10>
+     }
+
+
+}
  8000464:	bf00      	nop
  8000466:	bf00      	nop
  8000468:	371c      	adds	r7, #28
@@ -377,40 +471,68 @@ Disassembly of section .text:
  800046e:	4770      	bx	lr
 
 08000470 <main>:
+
+
+
+int main()
+{
  8000470:	b580      	push	{r7, lr}
  8000472:	b082      	sub	sp, #8
  8000474:	af00      	add	r7, sp, #0
+
+    unsigned int len = sizeof(numbers)/sizeof(int);
  8000476:	2311      	movs	r3, #17
  8000478:	607b      	str	r3, [r7, #4]
+
+    array_fill_numbers(numbers,len);
  800047a:	6879      	ldr	r1, [r7, #4]
  800047c:	4813      	ldr	r0, [pc, #76]	; (80004cc <main+0x5c>)
  800047e:	f7ff ff07 	bl	8000290 <array_fill_numbers>
+
+    display_numbers(numbers,len,"B-unsorted array :");
  8000482:	4a13      	ldr	r2, [pc, #76]	; (80004d0 <main+0x60>)
  8000484:	6879      	ldr	r1, [r7, #4]
  8000486:	4811      	ldr	r0, [pc, #68]	; (80004cc <main+0x5c>)
  8000488:	f7ff ff2c 	bl	80002e4 <display_numbers>
+
+    bubble_sort(numbers,len);
  800048c:	6879      	ldr	r1, [r7, #4]
  800048e:	480f      	ldr	r0, [pc, #60]	; (80004cc <main+0x5c>)
  8000490:	f7ff ff6a 	bl	8000368 <bubble_sort>
+
+    display_numbers(numbers,len,"B-sorted array   :");
  8000494:	4a0f      	ldr	r2, [pc, #60]	; (80004d4 <main+0x64>)
  8000496:	6879      	ldr	r1, [r7, #4]
  8000498:	480c      	ldr	r0, [pc, #48]	; (80004cc <main+0x5c>)
  800049a:	f7ff ff23 	bl	80002e4 <display_numbers>
+
+    array_fill_numbers(numbers,len);
  800049e:	6879      	ldr	r1, [r7, #4]
  80004a0:	480a      	ldr	r0, [pc, #40]	; (80004cc <main+0x5c>)
  80004a2:	f7ff fef5 	bl	8000290 <array_fill_numbers>
+
+    display_numbers(numbers,len,"I-unsorted array :");
  80004a6:	4a0c      	ldr	r2, [pc, #48]	; (80004d8 <main+0x68>)
  80004a8:	6879      	ldr	r1, [r7, #4]
  80004aa:	4808      	ldr	r0, [pc, #32]	; (80004cc <main+0x5c>)
  80004ac:	f7ff ff1a 	bl	80002e4 <display_numbers>
+
+    insertion_sort(numbers,len);
  80004b0:	6879      	ldr	r1, [r7, #4]
  80004b2:	4806      	ldr	r0, [pc, #24]	; (80004cc <main+0x5c>)
  80004b4:	f7ff ff9d 	bl	80003f2 <insertion_sort>
+
+    display_numbers(numbers,len,"I-sorted array   :");
  80004b8:	4a08      	ldr	r2, [pc, #32]	; (80004dc <main+0x6c>)
  80004ba:	6879      	ldr	r1, [r7, #4]
  80004bc:	4803      	ldr	r0, [pc, #12]	; (80004cc <main+0x5c>)
  80004be:	f7ff ff11 	bl	80002e4 <display_numbers>
+
+
+
+    return 0;
  80004c2:	2300      	movs	r3, #0
+}
  80004c4:	4618      	mov	r0, r3
  80004c6:	3708      	adds	r7, #8
  80004c8:	46bd      	mov	sp, r7
@@ -422,30 +544,49 @@ Disassembly of section .text:
  80004dc:	0800190c 	.word	0x0800190c
 
 080004e0 <ITM_SendChar>:
+/* ITM register addresses */
+#define ITM_STIMULUS_PORT0   	*((volatile uint32_t*) 0xE0000000 )
+#define ITM_TRACE_EN          	*((volatile uint32_t*) 0xE0000E00 )
+
+void ITM_SendChar(uint8_t ch)
+{
  80004e0:	b480      	push	{r7}
  80004e2:	b083      	sub	sp, #12
  80004e4:	af00      	add	r7, sp, #0
  80004e6:	4603      	mov	r3, r0
  80004e8:	71fb      	strb	r3, [r7, #7]
+
+	//Enable TRCENA
+	DEMCR |= ( 1 << 24);
  80004ea:	4b0e      	ldr	r3, [pc, #56]	; (8000524 <ITM_SendChar+0x44>)
  80004ec:	681b      	ldr	r3, [r3, #0]
  80004ee:	4a0d      	ldr	r2, [pc, #52]	; (8000524 <ITM_SendChar+0x44>)
  80004f0:	f043 7380 	orr.w	r3, r3, #16777216	; 0x1000000
  80004f4:	6013      	str	r3, [r2, #0]
+
+	//enable stimulus port 0
+	ITM_TRACE_EN |= ( 1 << 0);
  80004f6:	4b0c      	ldr	r3, [pc, #48]	; (8000528 <ITM_SendChar+0x48>)
  80004f8:	681b      	ldr	r3, [r3, #0]
  80004fa:	4a0b      	ldr	r2, [pc, #44]	; (8000528 <ITM_SendChar+0x48>)
  80004fc:	f043 0301 	orr.w	r3, r3, #1
  8000500:	6013      	str	r3, [r2, #0]
+
+	// read FIFO status in bit [0]:
+	while(!(ITM_STIMULUS_PORT0 & 1));
  8000502:	bf00      	nop
  8000504:	f04f 4360 	mov.w	r3, #3758096384	; 0xe0000000
  8000508:	681b      	ldr	r3, [r3, #0]
  800050a:	f003 0301 	and.w	r3, r3, #1
  800050e:	2b00      	cmp	r3, #0
  8000510:	d0f8      	beq.n	8000504 <ITM_SendChar+0x24>
+
+	//Write to ITM stimulus port0
+	ITM_STIMULUS_PORT0 = ch;
  8000512:	f04f 4260 	mov.w	r2, #3758096384	; 0xe0000000
  8000516:	79fb      	ldrb	r3, [r7, #7]
  8000518:	6013      	str	r3, [r2, #0]
+}
  800051a:	bf00      	nop
  800051c:	370c      	adds	r7, #12
  800051e:	46bd      	mov	sp, r7
@@ -455,50 +596,78 @@ Disassembly of section .text:
  8000528:	e0000e00 	.word	0xe0000e00
 
 0800052c <_getpid>:
+void initialise_monitor_handles()
+{
+}
+
+int _getpid(void)
+{
  800052c:	b480      	push	{r7}
  800052e:	af00      	add	r7, sp, #0
+	return 1;
  8000530:	2301      	movs	r3, #1
+}
  8000532:	4618      	mov	r0, r3
  8000534:	46bd      	mov	sp, r7
  8000536:	bc80      	pop	{r7}
  8000538:	4770      	bx	lr
 
 0800053a <_kill>:
+
+int _kill(int pid, int sig)
+{
  800053a:	b580      	push	{r7, lr}
  800053c:	b082      	sub	sp, #8
  800053e:	af00      	add	r7, sp, #0
  8000540:	6078      	str	r0, [r7, #4]
  8000542:	6039      	str	r1, [r7, #0]
+	errno = EINVAL;
  8000544:	f000 f8dc 	bl	8000700 <__errno>
  8000548:	4603      	mov	r3, r0
  800054a:	2216      	movs	r2, #22
  800054c:	601a      	str	r2, [r3, #0]
+	return -1;
  800054e:	f04f 33ff 	mov.w	r3, #4294967295
+}
  8000552:	4618      	mov	r0, r3
  8000554:	3708      	adds	r7, #8
  8000556:	46bd      	mov	sp, r7
  8000558:	bd80      	pop	{r7, pc}
 
 0800055a <_exit>:
+
+void _exit (int status)
+{
  800055a:	b580      	push	{r7, lr}
  800055c:	b082      	sub	sp, #8
  800055e:	af00      	add	r7, sp, #0
  8000560:	6078      	str	r0, [r7, #4]
+	_kill(status, -1);
  8000562:	f04f 31ff 	mov.w	r1, #4294967295
  8000566:	6878      	ldr	r0, [r7, #4]
  8000568:	f7ff ffe7 	bl	800053a <_kill>
+	while (1) {}		/* Make sure we hang here */
  800056c:	e7fe      	b.n	800056c <_exit+0x12>
 
 0800056e <_read>:
+}
+
+__attribute__((weak)) int _read(int file, char *ptr, int len)
+{
  800056e:	b580      	push	{r7, lr}
  8000570:	b086      	sub	sp, #24
  8000572:	af00      	add	r7, sp, #0
  8000574:	60f8      	str	r0, [r7, #12]
  8000576:	60b9      	str	r1, [r7, #8]
  8000578:	607a      	str	r2, [r7, #4]
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  800057a:	2300      	movs	r3, #0
  800057c:	617b      	str	r3, [r7, #20]
  800057e:	e00a      	b.n	8000596 <_read+0x28>
+	{
+		*ptr++ = __io_getchar();
  8000580:	f3af 8000 	nop.w
  8000584:	4601      	mov	r1, r0
  8000586:	68bb      	ldr	r3, [r7, #8]
@@ -506,6 +675,7 @@ Disassembly of section .text:
  800058a:	60ba      	str	r2, [r7, #8]
  800058c:	b2ca      	uxtb	r2, r1
  800058e:	701a      	strb	r2, [r3, #0]
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  8000590:	697b      	ldr	r3, [r7, #20]
  8000592:	3301      	adds	r3, #1
  8000594:	617b      	str	r3, [r7, #20]
@@ -513,28 +683,42 @@ Disassembly of section .text:
  8000598:	687b      	ldr	r3, [r7, #4]
  800059a:	429a      	cmp	r2, r3
  800059c:	dbf0      	blt.n	8000580 <_read+0x12>
+	}
+
+return len;
  800059e:	687b      	ldr	r3, [r7, #4]
+}
  80005a0:	4618      	mov	r0, r3
  80005a2:	3718      	adds	r7, #24
  80005a4:	46bd      	mov	sp, r7
  80005a6:	bd80      	pop	{r7, pc}
 
 080005a8 <_write>:
+
+__attribute__((weak)) int _write(int file, char *ptr, int len)
+{
  80005a8:	b580      	push	{r7, lr}
  80005aa:	b086      	sub	sp, #24
  80005ac:	af00      	add	r7, sp, #0
  80005ae:	60f8      	str	r0, [r7, #12]
  80005b0:	60b9      	str	r1, [r7, #8]
  80005b2:	607a      	str	r2, [r7, #4]
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  80005b4:	2300      	movs	r3, #0
  80005b6:	617b      	str	r3, [r7, #20]
  80005b8:	e009      	b.n	80005ce <_write+0x26>
+	{
+		//__io_putchar(*ptr++);
+		ITM_SendChar(*ptr++);
  80005ba:	68bb      	ldr	r3, [r7, #8]
  80005bc:	1c5a      	adds	r2, r3, #1
  80005be:	60ba      	str	r2, [r7, #8]
  80005c0:	781b      	ldrb	r3, [r3, #0]
  80005c2:	4618      	mov	r0, r3
  80005c4:	f7ff ff8c 	bl	80004e0 <ITM_SendChar>
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
  80005c8:	697b      	ldr	r3, [r7, #20]
  80005ca:	3301      	adds	r3, #1
  80005cc:	617b      	str	r3, [r7, #20]
@@ -542,18 +726,26 @@ Disassembly of section .text:
  80005d0:	687b      	ldr	r3, [r7, #4]
  80005d2:	429a      	cmp	r2, r3
  80005d4:	dbf1      	blt.n	80005ba <_write+0x12>
+	}
+	return len;
  80005d6:	687b      	ldr	r3, [r7, #4]
+}
  80005d8:	4618      	mov	r0, r3
  80005da:	3718      	adds	r7, #24
  80005dc:	46bd      	mov	sp, r7
  80005de:	bd80      	pop	{r7, pc}
 
 080005e0 <_close>:
+
+int _close(int file)
+{
  80005e0:	b480      	push	{r7}
  80005e2:	b083      	sub	sp, #12
  80005e4:	af00      	add	r7, sp, #0
  80005e6:	6078      	str	r0, [r7, #4]
+	return -1;
  80005e8:	f04f 33ff 	mov.w	r3, #4294967295
+}
  80005ec:	4618      	mov	r0, r3
  80005ee:	370c      	adds	r7, #12
  80005f0:	46bd      	mov	sp, r7
@@ -561,15 +753,22 @@ Disassembly of section .text:
  80005f4:	4770      	bx	lr
 
 080005f6 <_fstat>:
+
+
+int _fstat(int file, struct stat *st)
+{
  80005f6:	b480      	push	{r7}
  80005f8:	b083      	sub	sp, #12
  80005fa:	af00      	add	r7, sp, #0
  80005fc:	6078      	str	r0, [r7, #4]
  80005fe:	6039      	str	r1, [r7, #0]
+	st->st_mode = S_IFCHR;
  8000600:	683b      	ldr	r3, [r7, #0]
  8000602:	f44f 5200 	mov.w	r2, #8192	; 0x2000
  8000606:	605a      	str	r2, [r3, #4]
+	return 0;
  8000608:	2300      	movs	r3, #0
+}
  800060a:	4618      	mov	r0, r3
  800060c:	370c      	adds	r7, #12
  800060e:	46bd      	mov	sp, r7
@@ -577,11 +776,16 @@ Disassembly of section .text:
  8000612:	4770      	bx	lr
 
 08000614 <_isatty>:
+
+int _isatty(int file)
+{
  8000614:	b480      	push	{r7}
  8000616:	b083      	sub	sp, #12
  8000618:	af00      	add	r7, sp, #0
  800061a:	6078      	str	r0, [r7, #4]
+	return 1;
  800061c:	2301      	movs	r3, #1
+}
  800061e:	4618      	mov	r0, r3
  8000620:	370c      	adds	r7, #12
  8000622:	46bd      	mov	sp, r7
@@ -589,13 +793,18 @@ Disassembly of section .text:
  8000626:	4770      	bx	lr
 
 08000628 <_lseek>:
+
+int _lseek(int file, int ptr, int dir)
+{
  8000628:	b480      	push	{r7}
  800062a:	b085      	sub	sp, #20
  800062c:	af00      	add	r7, sp, #0
  800062e:	60f8      	str	r0, [r7, #12]
  8000630:	60b9      	str	r1, [r7, #8]
  8000632:	607a      	str	r2, [r7, #4]
+	return 0;
  8000634:	2300      	movs	r3, #0
+}
  8000636:	4618      	mov	r0, r3
  8000638:	3714      	adds	r7, #20
  800063a:	46bd      	mov	sp, r7
@@ -603,23 +812,44 @@ Disassembly of section .text:
  800063e:	4770      	bx	lr
 
 08000640 <_sbrk>:
+ *
+ * @param incr Memory size
+ * @return Pointer to allocated memory
+ */
+void *_sbrk(ptrdiff_t incr)
+{
  8000640:	b580      	push	{r7, lr}
  8000642:	b086      	sub	sp, #24
  8000644:	af00      	add	r7, sp, #0
  8000646:	6078      	str	r0, [r7, #4]
+  extern uint8_t _end; /* Symbol defined in the linker script */
+  extern uint8_t _estack; /* Symbol defined in the linker script */
+  extern uint32_t _Min_Stack_Size; /* Symbol defined in the linker script */
+  const uint32_t stack_limit = (uint32_t)&_estack - (uint32_t)&_Min_Stack_Size;
  8000648:	4a14      	ldr	r2, [pc, #80]	; (800069c <_sbrk+0x5c>)
  800064a:	4b15      	ldr	r3, [pc, #84]	; (80006a0 <_sbrk+0x60>)
  800064c:	1ad3      	subs	r3, r2, r3
  800064e:	617b      	str	r3, [r7, #20]
+  const uint8_t *max_heap = (uint8_t *)stack_limit;
  8000650:	697b      	ldr	r3, [r7, #20]
  8000652:	613b      	str	r3, [r7, #16]
+  uint8_t *prev_heap_end;
+
+  /* Initialize heap end at first call */
+  if (NULL == __sbrk_heap_end)
  8000654:	4b13      	ldr	r3, [pc, #76]	; (80006a4 <_sbrk+0x64>)
  8000656:	681b      	ldr	r3, [r3, #0]
  8000658:	2b00      	cmp	r3, #0
  800065a:	d102      	bne.n	8000662 <_sbrk+0x22>
+  {
+    __sbrk_heap_end = &_end;
  800065c:	4b11      	ldr	r3, [pc, #68]	; (80006a4 <_sbrk+0x64>)
  800065e:	4a12      	ldr	r2, [pc, #72]	; (80006a8 <_sbrk+0x68>)
  8000660:	601a      	str	r2, [r3, #0]
+  }
+
+  /* Protect heap from growing into the reserved MSP stack */
+  if (__sbrk_heap_end + incr > max_heap)
  8000662:	4b10      	ldr	r3, [pc, #64]	; (80006a4 <_sbrk+0x64>)
  8000664:	681a      	ldr	r2, [r3, #0]
  8000666:	687b      	ldr	r3, [r7, #4]
@@ -627,22 +857,32 @@ Disassembly of section .text:
  800066a:	693a      	ldr	r2, [r7, #16]
  800066c:	429a      	cmp	r2, r3
  800066e:	d207      	bcs.n	8000680 <_sbrk+0x40>
+  {
+    errno = ENOMEM;
  8000670:	f000 f846 	bl	8000700 <__errno>
  8000674:	4603      	mov	r3, r0
  8000676:	220c      	movs	r2, #12
  8000678:	601a      	str	r2, [r3, #0]
+    return (void *)-1;
  800067a:	f04f 33ff 	mov.w	r3, #4294967295
  800067e:	e009      	b.n	8000694 <_sbrk+0x54>
+  }
+
+  prev_heap_end = __sbrk_heap_end;
  8000680:	4b08      	ldr	r3, [pc, #32]	; (80006a4 <_sbrk+0x64>)
  8000682:	681b      	ldr	r3, [r3, #0]
  8000684:	60fb      	str	r3, [r7, #12]
+  __sbrk_heap_end += incr;
  8000686:	4b07      	ldr	r3, [pc, #28]	; (80006a4 <_sbrk+0x64>)
  8000688:	681a      	ldr	r2, [r3, #0]
  800068a:	687b      	ldr	r3, [r7, #4]
  800068c:	4413      	add	r3, r2
  800068e:	4a05      	ldr	r2, [pc, #20]	; (80006a4 <_sbrk+0x64>)
  8000690:	6013      	str	r3, [r2, #0]
+
+  return (void *)prev_heap_end;
  8000692:	68fb      	ldr	r3, [r7, #12]
+}
  8000694:	4618      	mov	r0, r3
  8000696:	3718      	adds	r7, #24
  8000698:	46bd      	mov	sp, r7
@@ -653,49 +893,109 @@ Disassembly of section .text:
  80006a8:	200000e0 	.word	0x200000e0
 
 080006ac <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
  80006ac:	480d      	ldr	r0, [pc, #52]	; (80006e4 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
  80006ae:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
  80006b0:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
  80006b4:	480c      	ldr	r0, [pc, #48]	; (80006e8 <LoopForever+0x6>)
+  ldr r1, =_edata
  80006b6:	490d      	ldr	r1, [pc, #52]	; (80006ec <LoopForever+0xa>)
+  ldr r2, =_sidata
  80006b8:	4a0d      	ldr	r2, [pc, #52]	; (80006f0 <LoopForever+0xe>)
+  movs r3, #0
  80006ba:	2300      	movs	r3, #0
+  b LoopCopyDataInit
  80006bc:	e002      	b.n	80006c4 <LoopCopyDataInit>
 
 080006be <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
  80006be:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
  80006c0:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
  80006c2:	3304      	adds	r3, #4
 
 080006c4 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
  80006c4:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
  80006c6:	428c      	cmp	r4, r1
+  bcc CopyDataInit
  80006c8:	d3f9      	bcc.n	80006be <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
  80006ca:	4a0a      	ldr	r2, [pc, #40]	; (80006f4 <LoopForever+0x12>)
+  ldr r4, =_ebss
  80006cc:	4c0a      	ldr	r4, [pc, #40]	; (80006f8 <LoopForever+0x16>)
+  movs r3, #0
  80006ce:	2300      	movs	r3, #0
+  b LoopFillZerobss
  80006d0:	e001      	b.n	80006d6 <LoopFillZerobss>
 
 080006d2 <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
  80006d2:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
  80006d4:	3204      	adds	r2, #4
 
 080006d6 <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
  80006d6:	42a2      	cmp	r2, r4
+  bcc FillZerobss
  80006d8:	d3fb      	bcc.n	80006d2 <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
  80006da:	f000 f817 	bl	800070c <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
  80006de:	f7ff fec7 	bl	8000470 <main>
 
 080006e2 <LoopForever>:
+
+LoopForever:
+    b LoopForever
  80006e2:	e7fe      	b.n	80006e2 <LoopForever>
+  ldr   r0, =_estack
  80006e4:	20020000 	.word	0x20020000
+  ldr r0, =_sdata
  80006e8:	20000000 	.word	0x20000000
+  ldr r1, =_edata
  80006ec:	200000ac 	.word	0x200000ac
+  ldr r2, =_sidata
  80006f0:	08001a70 	.word	0x08001a70
+  ldr r2, =_sbss
  80006f4:	200000ac 	.word	0x200000ac
+  ldr r4, =_ebss
  80006f8:	200000dc 	.word	0x200000dc
 
 080006fc <ADC_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
  80006fc:	e7fe      	b.n	80006fc <ADC_IRQHandler>
 	...
 
