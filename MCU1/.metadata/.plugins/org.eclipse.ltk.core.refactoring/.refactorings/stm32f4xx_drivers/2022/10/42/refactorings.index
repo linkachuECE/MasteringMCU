@@ -1,1 +1,5 @@
 1665525465747	Rename resource '011_i2c_slave_tx_string'
+1665619705143	Rename resource 'stm32407xx_gpio_driver.h'
+1665619717027	Rename resource 'stm32407xx_spi_driver.h'
+1665619725084	Rename resource 'stm32407xx_gpio_driver.c'
+1665619732794	Rename resource 'stm32407xx_spi_driver.c'

@@ -99,7 +99,6 @@ typedef struct{
 
 // Peripheral clock setup
 void I2C_PeriClockControl(I2C_RegDef_t *pI2Cx, uint8_t EnorDi);
-uint32_t RCC_GetPCLK1Value(void);
 
 // Init and de-enit
 void I2C_Init(I2C_Handle_t *pI2CHandle);

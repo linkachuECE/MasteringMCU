@@ -22,6 +22,13 @@ typedef struct{
 typedef struct{
 	USART_RegDef_t* pUSARTx;
 	USART_Config_t USART_Config;
+	uint32_t 		TxLen;
+	uint32_t 		RxLen;
+	uint8_t 		TxBusyState;
+	uint8_t			RxBusyState;
+	uint8_t 		sr;
+	uint8_t*		pTxBuffer;
+	uint8_t*		pRxBuffer;
 } USART_Handle_t;
 
 /*
@@ -48,7 +55,6 @@ typedef struct{
 #define USART_STD_BAUD_921600 				921600
 #define USART_STD_BAUD_2M 					2000000
 #define SUART_STD_BAUD_3M 					3000000
-
 
 /*
  *@parityControl
@@ -83,7 +89,10 @@ typedef struct{
 #define USART_HW_FLOW_CTRL_RTS    	2
 #define USART_HW_FLOW_CTRL_CTS_RTS	3
 
-
+// USART Busy States
+#define USART_READY					0
+#define USART_BUSY_IN_TX			1
+#define USART_BUSY_IN_RX			2
 
 // Status flag macros
 #define USART_PE_FLAG		(1 << USART_SR_PE)
@@ -115,7 +124,7 @@ void USART_SendData(USART_RegDef_t *pUSARTx,uint8_t *pTxBuffer, uint32_t Len);
 void USART_ReceiveData(USART_RegDef_t *pUSARTx, uint8_t *pRxBuffer, uint32_t Len);
 uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len);
 uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len);
-
+void USART_SetBaudRate(USART_RegDef_t *pUSARTx, uint32_t BaudRate);
 /*
  * IRQ Configuration and ISR handling
  */
