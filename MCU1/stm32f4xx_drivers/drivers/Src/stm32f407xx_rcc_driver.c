@@ -102,7 +102,7 @@ uint32_t RCC_GetPCLK2Value(void){
 	else
 		apb2p = APB2Prescaler[temp - 0b100];
 
-	pclk2 = systemClk/(ahbp * apb1p);
+	pclk2 = systemClk/(ahbp * apb2p);
 
 	return pclk2;
 }

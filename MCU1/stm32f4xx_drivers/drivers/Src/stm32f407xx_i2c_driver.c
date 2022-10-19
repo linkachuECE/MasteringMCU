@@ -420,7 +420,7 @@ void I2C_SlaveSendData(I2C_RegDef_t *pI2Cx, uint8_t data){
  * @Note		- none
  */
 uint8_t I2C_SlaveReceiveData(I2C_RegDef_t *pI2Cx){
-	return (uint8_t)pI2Cx-DR;
+	return (uint8_t)pI2Cx->DR;
 }
 
 /*****************************************************************

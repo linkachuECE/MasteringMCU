@@ -5,11 +5,12 @@
  *      Author: linkachu
  */
 #include "stm32f407xx.h"
+#include "stm32407xx_spi_driver.h"
 #include <string.h>
 #include <stdio.h>
 
-void delay(uint16_t ms){
-	for(uint32_t i = 0; i < (ms*1000); i++);
+void delay(void){
+	for(uint32_t i = 0; i < 20000; i++);
 }
 
 typedef struct {
@@ -52,6 +53,8 @@ void SPI2_GPIO_Inits(SPI_GPIO_Pins_t* SPIPort){
 	SPIPort->NSS.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
 	SPIPort->NSS.GPIO_PinConfig.GPIO_PinAltFunMode = 5;
 
+	GPIO_PeriClockControl(GPIOB, ENABLE);
+
 	GPIO_Init(&(SPIPort->MOSI));
 	GPIO_Init(&(SPIPort->MISO));
 	GPIO_Init(&(SPIPort->SCK));
@@ -59,76 +62,78 @@ void SPI2_GPIO_Inits(SPI_GPIO_Pins_t* SPIPort){
 }
 
 void SPI2_Init(SPI_Handle_t* SPIDevice){
+	/*
+	 * This version is configured with the following settings:
+	 * - Master Mode
+	 * - Full Duplex
+	 * - 8-bit data frame format
+	 * - Low Clock polarity, first phase detection
+	 * - Hardware controlled slave select
+	 * - Single master
+	 */
+
 	SPIDevice->pSPIx = SPI2;
-	SPIDevice->SPIConfig.BusConfig = SPI_BUS_CONFIG_FD;
 	SPIDevice->SPIConfig.DeviceMode = SPI_DEVICE_MODE_MASTER;
-	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV16;
+	SPIDevice->SPIConfig.BusConfig = SPI_BUS_CONFIG_FD;
+	SPIDevice->SPIConfig.SclkSpeed = SPI_SCLK_SPEED_DIV2;
 	SPIDevice->SPIConfig.DFF = SPI_DFF_8BITS;
 	SPIDevice->SPIConfig.CPOL = SPI_CPOL_LOW;
 	SPIDevice->SPIConfig.CPHA = SPI_CPHA_FIRST;
 	SPIDevice->SPIConfig.SSM = SPI_SSM_HW;
-	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_MSBFIRST;
+	SPIDevice->SPIConfig.FrameFormat = SPI_FRAME_FORMAT_LSBFIRST;
 
 	SPI_Init(SPIDevice);
+
+	// Enable SSOE so that NSS goes low when SPE goes high
+	SPI_SSOEControl(SPIDevice->pSPIx, ENABLE);
 }
 
 void USRBTN_Init(GPIO_Handle_t* USRPB){
 	USRPB->pGPIOx = GPIOA;
 	USRPB->GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
-	USRPB->GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_RT;
+	USRPB->GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IN;
 	USRPB->GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 	USRPB->GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PUPD;
 
 	GPIO_Init(USRPB);
-}
 
-//Global variables for interrupt
-SPI_GPIO_Pins_t spi2Pins;
-SPI_Handle_t mySPIDevice;
-
-void sendMessage(){
-	char* myString = "I want to marry Janiyah";
-
-	SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
-
-	uint8_t messageLen = strlen(myString);
-
-	// First send the length
-	SPI_SendData(mySPIDevice.pSPIx, &messageLen, sizeof(uint8_t));
-	delay(1);
-
-	// Then send the message
-	SPI_SendData(mySPIDevice.pSPIx, (uint8_t*)myString, messageLen);
-
-	// Wait for busy flag to be reset
-	while(SPI_GetFlagStatus(SPI2, SPI_BSY_FLAG));
-
-	SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
+	GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, 1, ENABLE);
 }
 
 int main(void){
 
+	// Initialize the appropriate GPIO pins on port B
+	SPI_GPIO_Pins_t spi2Pins;
 	SPI2_GPIO_Inits(&spi2Pins);
+
+	// Initialize the SPI2 peripheral
+	SPI_Handle_t mySPIDevice;
 	SPI2_Init(&mySPIDevice);
 
-	// Enable SSOE (Slave Select Output Enable)
-	// This allows the NSS to be toggled every time
-	// we use SPI_PeripheralControl
-	SPI_SSOEControl(SPI2, ENABLE);
-
-	// Initialize user button
+	// Initialize user button and interrupts
 	GPIO_Handle_t USRPB;
 	memset(&USRPB, 0, sizeof(USRPB));
 	USRBTN_Init(&USRPB);
 
-	// Create interrupt for button:
-	GPIO_IRQInterruptConfig(IRQ_NO_EXTI0, 1, ENABLE);
+	char* myString = "In the name of Robert of the house Baratheon, the first of his name, king of the Andals and the first men, lord of the seven kingdoms and protector of the realm. I Eddard Of the house Stark, lord of Winterfell and warden of the north sentence you to die.";
 
-	while(1);
-}
+	SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
 
-void EXTI0_IRQHandler(void){
-	delay(200);
-	GPIO_IRQHandling(GPIO_PIN_NO_0);
-	sendMessage();
+	while(1){
+		while ( ! GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0));
+		delay();
+
+		SPI_PeripheralControl(mySPIDevice.pSPIx, ENABLE);
+
+		uint8_t stringSize = strlen(myString);
+
+		SPI_SendData(mySPIDevice.pSPIx, &stringSize, sizeof(uint8_t));
+
+		SPI_SendData(mySPIDevice.pSPIx, (uint8_t*)myString, strlen(myString));
+		delay();
+
+		while(SPI_GetFlagStatus(mySPIDevice.pSPIx, SPI_BSY_FLAG));
+
+		SPI_PeripheralControl(mySPIDevice.pSPIx, DISABLE);
+	}
 }

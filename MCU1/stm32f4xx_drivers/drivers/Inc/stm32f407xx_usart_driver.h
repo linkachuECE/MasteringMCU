@@ -106,6 +106,15 @@ typedef struct{
 #define USART_LBD_FLAG		(1 << USART_SR_LBD)
 #define USART_CTS_FLAG		(1 << USART_SR_CTS)
 
+// Event macros
+#define USART_EVENT_TX_CMPLT 	0
+#define USART_EVENT_RX_CMPLT 	1
+#define USART_EVENT_CTS			2
+#define USART_EVENT_IDLE		3
+#define USART_EVENT_ORE			4
+#define USART_ERREVENT_FE		5
+#define USART_ERREVENT_NE		6
+#define USART_ERREVENT_ORE		7
 /*
  * Peripheral Clock setup
  */
@@ -120,10 +129,11 @@ void USART_DeInit(USART_RegDef_t *pUSARTx);
 /*
  * Data Send and Receive
  */
-void USART_SendData(USART_RegDef_t *pUSARTx,uint8_t *pTxBuffer, uint32_t Len);
-void USART_ReceiveData(USART_RegDef_t *pUSARTx, uint8_t *pRxBuffer, uint32_t Len);
-uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t Len);
-uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t Len);
+
+void USART_SendData(USART_Handle_t *pUSARTHandle, uint8_t *pTxBuffer, uint32_t len);
+void USART_ReceiveData(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t len);
+uint8_t USART_SendDataIT(USART_Handle_t *pUSARTHandle,uint8_t *pTxBuffer, uint32_t len);
+uint8_t USART_ReceiveDataIT(USART_Handle_t *pUSARTHandle, uint8_t *pRxBuffer, uint32_t len);
 void USART_SetBaudRate(USART_RegDef_t *pUSARTx, uint32_t BaudRate);
 /*
  * IRQ Configuration and ISR handling
