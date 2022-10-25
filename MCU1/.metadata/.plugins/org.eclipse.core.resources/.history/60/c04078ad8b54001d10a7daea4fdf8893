@@ -41,98 +41,110 @@ uint8_t ds1307_init(){
 }
 
 void ds1307_set_current_time(RTC_time_t* rtc_time){
-	uint8_t secTens, secOnes;
-	uint8_t minTens, minOnes;
-	uint8_t hourTens, hourOnes;
-	uint8_t AMorPM, timeFormat;
 
+	uint8_t temp1, temp2, temp3, temp4;
+	uint8_t hoursVar;
 	uint8_t tempReg = 0x00;
+	uint8_t writeAddr;
+	uint8_t buff[2];
 
 	// Set seconds
-	secTens = rtc_time->seconds / 10;
-	secOnes = rtc_time->seconds % 10;
-	tempReg |= (secTens << 4);
-	tempReg |= secOnes;
+	temp1 = rtc_time->seconds % 10;
+	temp2 = rtc_time->seconds / 10;
+	tempReg |= temp1;
+	tempReg |= (temp2 << 4);
 
-	ds1307_write(tempReg, DS1307_ADDR_SEC);
-	tempReg = 0x00;
+	writeAddr = DS1307_ADDR_SEC;
+
+	buff[0] = writeAddr;
+	buff[1] = tempReg;
+
+	I2C_MasterSendData(&g_ds1307I2cHandle, buff, 2, DS1307_I2C_ADDRESS, 1);
+
+	tempReg = 0;
 
 	// Set minutes
-	minTens = rtc_time->minutes / 10;
-	minOnes = rtc_time->minutes % 10;
-	tempReg |= (minTens << 4);
-	tempReg |= minOnes;
+	temp1 = rtc_time->minutes % 10;
+	temp2 = rtc_time->minutes / 10;
+	tempReg |= temp1;
+	tempReg |= (temp2 << 4);
 
-	ds1307_write(tempReg, DS1307_ADDR_MIN);
-	tempReg = 0x00;
+	writeAddr = DS1307_ADDR_MIN;
+
+	buff[0] = writeAddr;
+	buff[1] = tempReg;
+
+	I2C_MasterSendData(&g_ds1307I2cHandle, buff, 2, DS1307_I2C_ADDRESS, 1);
+
+	tempReg = 0;
 
 	// Set hours
-	timeFormat = rtc_time->time_format;
+	temp3 = rtc_time->time_format;	// Temp 3 is for the hour format
 
-	// 12-hour format
-	if(timeFormat == TIME_FORMAT_12HRS){
-		AMorPM = rtc_time->hours / 12;
-		hourTens = (rtc_time->hours % 12) / 10;
-		hourOnes = (rtc_time->hours % 12) % 10;
+	if(temp3 == TIME_FORMAT_12HRS){
+		temp4 = rtc_time->hours / 12;		// Temp 4 for is for the AM/PM indicator
+		hoursVar = rtc_time->hours % 12;
+	} else hoursVar = rtc_time->hours;
 
-		tempReg |= hourOnes;
-		tempReg |= (hourTens << 4);
-		tempReg |= (AMorPM << 5);
-		tempReg |= (timeFormat << 6);
-	}
-	// 24-hour format
-	else {
-		hourTens = rtc_time->hours / 10;
-		hourOnes = rtc_time->hours % 10;
+	temp1 = hoursVar % 10;			// Temp 1 is for the ones place
+	temp2 = hoursVar / 10;			// Temp 2 is for the tens place
+	tempReg |= temp1;
+	tempReg |= (temp2 << 4);
 
-		tempReg |= hourOnes;
-		tempReg |= (hourTens << 4);
-		tempReg |= (timeFormat << 6);
-	}
+	if(temp3 == TIME_FORMAT_12HRS)
+		tempReg |= (temp4 << 5);
 
-	ds1307_write(tempReg, DS1307_ADDR_HRS);
+	tempReg |= (temp3 << 6);
+
+	writeAddr = DS1307_ADDR_HRS;
+
+	buff[0] = writeAddr;
+	buff[1] = tempReg;
+
+	I2C_MasterSendData(&g_ds1307I2cHandle, buff, 2, DS1307_I2C_ADDRESS, 1);
 }
 
 void ds1307_get_current_time(RTC_time_t* rtc_time){
-	uint8_t secTens, secOnes;
-	uint8_t minTens, minOnes;
-	uint8_t hourTens, hourOnes;
-	uint8_t AMorPM, timeFormat;
+	uint8_t readAddr, tempReg;
+	uint8_t tens, ones;
+	uint8_t hourFormat, AMorPM;
 
-	uint8_t tempReg = 0x00;
+	// Read from seconds buffer
+	readAddr = DS1307_ADDR_SEC;
 
-	// Retrieve seconds
-	tempReg = ds1307_read(DS1207_ADDR_SEC);
-	secOnes = tempReg & 0x0F;
-	secTens = (tempReg >> 4) & 0x07;
-	rtc_time->seconds = (secTens * 10) + secOnes;
+	I2C_MasterSendData(&g_ds1307I2cHandle, &readAddr, 1, DS1307_I2C_ADDRESS, 1);
+	I2C_MasterReceiveData(&g_ds1307I2cHandle, &tempReg, 1, DS1307_I2C_ADDRESS, 0);
 
-	// Retrieve minutes
-	tempReg = ds1307_read(DS1207_ADDR_MIN);
-	minOnes = tempReg & 0x0F;
-	minTens = (tempReg >> 4) & 0x07;
-	rtc_time->minutes = (minTens * 10) + minOnes;
+	tens = (tempReg >> 4) & 0x07;
+	ones = tempReg & 0xF;
+	rtc_time->seconds = (tens * 10) + ones;
 
-	// Retrieve time format
-	tempReg = ds1307_read(DS1207_ADDR_HRS);
-	timeFormat = (tempReg >> 6) & 0x01;
-	rtc_time->time_format = timeFormat;
+	// Read from minutes buffer
+	readAddr = DS1307_ADDR_MIN;
 
-	// Retrieve hours
-	// 12-hour format
-	if(timeFormat == TIME_FORMAT_12HRS){
+	I2C_MasterSendData(&g_ds1307I2cHandle, &readAddr, 1, DS1307_I2C_ADDRESS, 1);
+	I2C_MasterReceiveData(&g_ds1307I2cHandle, &tempReg, 1, DS1307_I2C_ADDRESS, 0);
+
+	tens = (tempReg >> 4) & 0x07;
+	ones = tempReg & 0xF;
+	rtc_time->minutes = (tens * 10) + ones;
+
+	// Read from hours buffer
+	readAddr = DS1307_ADDR_HRS;
+
+	I2C_MasterSendData(&g_ds1307I2cHandle, &readAddr, 1, DS1307_I2C_ADDRESS, 1);
+	I2C_MasterReceiveData(&g_ds1307I2cHandle, &tempReg, 1, DS1307_I2C_ADDRESS, 0);
+
+	ones = tempReg & 0x0F;
+
+	hourFormat = (tempReg >> 6) & 0x01;
+	rtc_time->time_format = hoursFormat;
+
+	if(hourFormat == TIME_FORMAT_12HRS){
 		AMorPM = (tempReg >> 5) & 0x01;
-		hourTens = (tempReg >> 4) & 0x01;
-		hourOnes = tempReg & 0x0F;
-
-		rtc_time->hours = (hourTens * 10) + hourOnes;
-	}
-	// 24-hour format
-	else {
-		hourTens = (tempReg >> 4) & 0x03;
-		hourOnes = tempReg & 0x0F;
-
-		rtc_time->hours = (hourTens * 10) + hourOnes;
+		tens = (tempReg >> 4) & 0x01;
+	} else if (hourFormat == TIME_FORMAT_24HRS){
+		tens = (tempReg >> 4) & 0x03;
 	}
 }
 

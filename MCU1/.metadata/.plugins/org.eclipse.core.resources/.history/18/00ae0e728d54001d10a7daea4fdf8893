@@ -44,96 +44,11 @@ void ds1307_set_current_time(RTC_time_t* rtc_time){
 	uint8_t secTens, secOnes;
 	uint8_t minTens, minOnes;
 	uint8_t hourTens, hourOnes;
-	uint8_t AMorPM, timeFormat;
-
-	uint8_t tempReg = 0x00;
-
-	// Set seconds
-	secTens = rtc_time->seconds / 10;
-	secOnes = rtc_time->seconds % 10;
-	tempReg |= (secTens << 4);
-	tempReg |= secOnes;
-
-	ds1307_write(tempReg, DS1307_ADDR_SEC);
-	tempReg = 0x00;
-
-	// Set minutes
-	minTens = rtc_time->minutes / 10;
-	minOnes = rtc_time->minutes % 10;
-	tempReg |= (minTens << 4);
-	tempReg |= minOnes;
-
-	ds1307_write(tempReg, DS1307_ADDR_MIN);
-	tempReg = 0x00;
-
-	// Set hours
-	timeFormat = rtc_time->time_format;
-
-	// 12-hour format
-	if(timeFormat == TIME_FORMAT_12HRS){
-		AMorPM = rtc_time->hours / 12;
-		hourTens = (rtc_time->hours % 12) / 10;
-		hourOnes = (rtc_time->hours % 12) % 10;
-
-		tempReg |= hourOnes;
-		tempReg |= (hourTens << 4);
-		tempReg |= (AMorPM << 5);
-		tempReg |= (timeFormat << 6);
-	}
-	// 24-hour format
-	else {
-		hourTens = rtc_time->hours / 10;
-		hourOnes = rtc_time->hours % 10;
-
-		tempReg |= hourOnes;
-		tempReg |= (hourTens << 4);
-		tempReg |= (timeFormat << 6);
-	}
-
-	ds1307_write(tempReg, DS1307_ADDR_HRS);
+	uint8_t AMorPM
 }
 
 void ds1307_get_current_time(RTC_time_t* rtc_time){
-	uint8_t secTens, secOnes;
-	uint8_t minTens, minOnes;
-	uint8_t hourTens, hourOnes;
-	uint8_t AMorPM, timeFormat;
 
-	uint8_t tempReg = 0x00;
-
-	// Retrieve seconds
-	tempReg = ds1307_read(DS1207_ADDR_SEC);
-	secOnes = tempReg & 0x0F;
-	secTens = (tempReg >> 4) & 0x07;
-	rtc_time->seconds = (secTens * 10) + secOnes;
-
-	// Retrieve minutes
-	tempReg = ds1307_read(DS1207_ADDR_MIN);
-	minOnes = tempReg & 0x0F;
-	minTens = (tempReg >> 4) & 0x07;
-	rtc_time->minutes = (minTens * 10) + minOnes;
-
-	// Retrieve time format
-	tempReg = ds1307_read(DS1207_ADDR_HRS);
-	timeFormat = (tempReg >> 6) & 0x01;
-	rtc_time->time_format = timeFormat;
-
-	// Retrieve hours
-	// 12-hour format
-	if(timeFormat == TIME_FORMAT_12HRS){
-		AMorPM = (tempReg >> 5) & 0x01;
-		hourTens = (tempReg >> 4) & 0x01;
-		hourOnes = tempReg & 0x0F;
-
-		rtc_time->hours = (hourTens * 10) + hourOnes;
-	}
-	// 24-hour format
-	else {
-		hourTens = (tempReg >> 4) & 0x03;
-		hourOnes = tempReg & 0x0F;
-
-		rtc_time->hours = (hourTens * 10) + hourOnes;
-	}
 }
 
 void ds1307_set_current_date(RTC_date_t* rtc_date){

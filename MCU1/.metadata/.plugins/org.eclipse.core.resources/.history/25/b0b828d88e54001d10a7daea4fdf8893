@@ -111,14 +111,13 @@ void ds1307_get_current_time(RTC_time_t* rtc_time){
 	tempReg = ds1307_read(DS1207_ADDR_MIN);
 	minOnes = tempReg & 0x0F;
 	minTens = (tempReg >> 4) & 0x07;
-	rtc_time->minutes = (minTens * 10) + minOnes;
+	rtc_time->seconds = (minTens * 10) + minOnes;
 
-	// Retrieve time format
+	// Retrieve hours
 	tempReg = ds1307_read(DS1207_ADDR_HRS);
 	timeFormat = (tempReg >> 6) & 0x01;
 	rtc_time->time_format = timeFormat;
 
-	// Retrieve hours
 	// 12-hour format
 	if(timeFormat == TIME_FORMAT_12HRS){
 		AMorPM = (tempReg >> 5) & 0x01;
@@ -129,10 +128,12 @@ void ds1307_get_current_time(RTC_time_t* rtc_time){
 	}
 	// 24-hour format
 	else {
-		hourTens = (tempReg >> 4) & 0x03;
-		hourOnes = tempReg & 0x0F;
+		hourTens = rtc_time->hours / 10;
+		hourOnes = rtc_time->hours % 10;
 
-		rtc_time->hours = (hourTens * 10) + hourOnes;
+		tempReg |= hourOnes;
+		tempReg |= (hourTens << 4);
+		tempReg |= (timeFormat << 6);
 	}
 }
 
