@@ -1,6 +1,7 @@
-"./Src/011uart_tx.o"
+"./Src/012rtc_lcd.o"
 "./Src/sysmem.o"
 "./Startup/startup_stm32f407vgtx.o"
+"./bsp/ds1307.o"
 "./drivers/Src/stm32f407xx_gpio_driver.o"
 "./drivers/Src/stm32f407xx_i2c_driver.o"
 "./drivers/Src/stm32f407xx_rcc_driver.o"
