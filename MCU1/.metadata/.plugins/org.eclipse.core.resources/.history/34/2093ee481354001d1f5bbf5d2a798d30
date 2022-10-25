@@ -115,9 +115,9 @@ void ds1307_get_current_time(RTC_time_t* rtc_time){
 	I2C_MasterSendData(&g_ds1307I2cHandle, &readAddr, 1, DS1307_I2C_ADDRESS, 1);
 	I2C_MasterReceiveData(&g_ds1307I2cHandle, &tempReg, 1, DS1307_I2C_ADDRESS, 0);
 
-	tens = (tempReg >> 4) & 0x07;
+	tens = (tempReg >> 4) & 0x7;
 	ones = tempReg & 0xF;
-	rtc_time->seconds = (tens * 10) + ones;
+	rtc_time->seconds = tens + ones;
 
 	// Read from minutes buffer
 	readAddr = DS1307_ADDR_MIN;
@@ -125,27 +125,19 @@ void ds1307_get_current_time(RTC_time_t* rtc_time){
 	I2C_MasterSendData(&g_ds1307I2cHandle, &readAddr, 1, DS1307_I2C_ADDRESS, 1);
 	I2C_MasterReceiveData(&g_ds1307I2cHandle, &tempReg, 1, DS1307_I2C_ADDRESS, 0);
 
-	tens = (tempReg >> 4) & 0x07;
+	tens = (tempReg >> 4) & 0x7;
 	ones = tempReg & 0xF;
-	rtc_time->minutes = (tens * 10) + ones;
+	rtc_time->minutes = tens + ones;
 
 	// Read from hours buffer
-	readAddr = DS1307_ADDR_HRS;
+	readAddr = DS1307_ADDR_MIN;
 
 	I2C_MasterSendData(&g_ds1307I2cHandle, &readAddr, 1, DS1307_I2C_ADDRESS, 1);
 	I2C_MasterReceiveData(&g_ds1307I2cHandle, &tempReg, 1, DS1307_I2C_ADDRESS, 0);
 
-	ones = tempReg & 0x0F;
-
-	hourFormat = (tempReg >> 6) & 0x01;
-	rtc_time->time_format = hoursFormat;
-
-	if(hourFormat == TIME_FORMAT_12HRS){
-		AMorPM = (tempReg >> 5) & 0x01;
-		tens = (tempReg >> 4) & 0x01;
-	} else if (hourFormat == TIME_FORMAT_24HRS){
-		tens = (tempReg >> 4) & 0x03;
-	}
+	tens = (tempReg >> 4) & 0x7;
+	ones = tempReg & 0xF;
+	rtc_time->minutes = tens + ones;
 }
 
 void ds1307_set_current_date(RTC_date_t* rtc_date){
