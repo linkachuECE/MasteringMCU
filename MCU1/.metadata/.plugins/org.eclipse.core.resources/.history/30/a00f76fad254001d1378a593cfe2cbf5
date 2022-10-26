@@ -1,0 +1,56 @@
+/*
+ * 012rtc_lcd.c
+ *
+ *  Created on: Oct 24, 2022
+ *      Author: egbra
+ */
+
+#include "stm32f407xx.h"
+#include "ds1307.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(void){
+	RTC_time_t rtc_time = { .seconds = 0,
+							.minutes = 0,
+							.hours = 0,
+							.time_format = TIME_FORMAT_24HRS };
+	RTC_date_t rtc_date = { .dayOfWeek = SUNDAY,
+							.date = 1,
+							.month = 1,
+							.year = 2000 };
+
+	printf("RTC Test:\n");
+
+	if(ds1307_init()){
+		printf("RTC Init has failed...\n");
+		while(1);
+	}
+
+	ds1307_set_current_time(&rtc_time);
+	ds1307_set_current_date(&rtc_date);
+
+	ds1307_get_current_time(&rtc_time);
+	ds1307_get_current_date(&rtc_date);
+
+	char* ampm;
+	if (rtc_time.time_format == TIME_FORMAT_12HRS)
+		ampm = (rtc_time.hours < 12) ? "PM" : "AM";
+	else
+		ampm = "";
+
+	printf("Current time: %d:%d:%d %s\n", 	rtc_time.hours,
+											rtc_time.minutes,
+											rtc_time.seconds,
+											ampm);
+
+	printf("Current date: %s, %s %d, %d\n",	getDayOfWeek(&rtc_date),
+											getMonth(&rtc_date),
+											rtc_date.date,
+											rtc_date.year);
+
+
+	return 0;
+}

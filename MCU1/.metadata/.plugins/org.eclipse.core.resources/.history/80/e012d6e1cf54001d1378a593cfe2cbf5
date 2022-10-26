@@ -1,0 +1,14 @@
+/*
+ * 012rtc_lcd.c
+ *
+ *  Created on: Oct 24, 2022
+ *      Author: egbra
+ */
+
+#include "stm32f407xx.h"
+#include "ds1307.h"
+
+int main(void){
+
+	return 0;
+}

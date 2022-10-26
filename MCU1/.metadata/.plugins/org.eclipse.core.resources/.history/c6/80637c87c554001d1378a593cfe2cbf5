@@ -1,0 +1,248 @@
+#include "stm32f407xx.h"
+#include "ds1307.h"
+
+#include <stdint.h>
+#include <string.h>
+
+static void ds1307_i2c_pin_config(void);
+static void ds1307_write(uint8_t value, uint8_t reg_address);
+static uint8_t ds1307_read(uint8_t regAddress);
+static void ds1307_i2c_config(void);
+
+I2C_Handle_t g_ds1307I2cHandle;
+
+/*********************************************************************
+ * @fn      		  - ds1307_init
+ *
+ * @brief             - Initializes the ds1307 RTC
+ *
+ * @return            -
+ *
+ * @Note              - None
+
+ */
+uint8_t ds1307_init(){
+	// 1. Inititialize the I2C pins
+	ds1307_i2c_pin_config();
+
+	// 2. Initialize the I2C peripheral
+	ds1307_i2c_config();
+
+	// 3. Enable the I2C peripheral
+	I2C_PeripheralControl(&g_ds1307I2cHandle, ENABLE);
+
+	// 4. Make clock halt = 0
+	ds1307_write(0X00, DS1307_ADDR_SEC);
+
+	// 5. Read back clock halt bit
+	uint8_t clockState = ds1307_read(DS1307_ADDR_SEC);
+
+	return (clockState >> 7) & 0x01;
+}
+
+void ds1307_set_current_time(RTC_time_t* rtc_time){
+	uint8_t tens, ones;
+	uint8_t AMorPM, timeFormat;
+
+	uint8_t tempReg = 0x00;
+
+	// Set seconds
+	tens = rtc_time->seconds / 10;
+	ones = rtc_time->seconds % 10;
+	tempReg |= ones;
+	tempReg |= (tens << 4);
+
+	ds1307_write(tempReg, DS1307_ADDR_SEC);
+	tempReg = 0x00;
+
+	// Set minutes
+	tens = rtc_time->minutes / 10;
+	ones = rtc_time->minutes % 10;
+	tempReg |= ones;
+	tempReg |= (tens << 4);
+
+	ds1307_write(tempReg, DS1307_ADDR_MIN);
+	tempReg = 0x00;
+
+	// Set hours
+	timeFormat = rtc_time->time_format;
+
+	// 12-hour format
+	if(timeFormat == TIME_FORMAT_12HRS){
+		AMorPM = rtc_time->hours / 12;
+		tens = (rtc_time->hours % 12) / 10;
+		ones = (rtc_time->hours % 12) % 10;
+
+		tempReg |= ones;
+		tempReg |= (tens << 4);
+		tempReg |= (AMorPM << 5);
+		tempReg |= (timeFormat << 6);
+	}
+	// 24-hour format
+	else {
+		tens = rtc_time->hours / 10;
+		ones = rtc_time->hours % 10;
+
+		tempReg |= ones;
+		tempReg |= (tens << 4);
+		tempReg |= (timeFormat << 6);
+	}
+
+	ds1307_write(tempReg, DS1307_ADDR_HRS);
+}
+
+void ds1307_get_current_time(RTC_time_t* rtc_time){
+	uint8_t tens, ones;
+	uint8_t AMorPM, timeFormat;
+
+	uint8_t tempReg = 0x00;
+
+	// Retrieve seconds
+	tempReg = ds1307_read(DS1307_ADDR_SEC);
+	ones = tempReg & 0x0F;
+	tens = (tempReg >> 4) & 0x07;
+	rtc_time->seconds = (tens * 10) + ones;
+
+	// Retrieve minutes
+	tempReg = ds1307_read(DS1307_ADDR_MIN);
+	ones = tempReg & 0x0F;
+	tens = (tempReg >> 4) & 0x07;
+	rtc_time->minutes = (tens * 10) + ones;
+
+	// Retrieve time format
+	tempReg = ds1307_read(DS1307_ADDR_HRS);
+	timeFormat = (tempReg >> 6) & 0x01;
+	rtc_time->time_format = timeFormat;
+
+	// Retrieve hours
+	// 12-hour format
+	if(timeFormat == TIME_FORMAT_12HRS){
+		ones = tempReg & 0x0F;
+		tens = (tempReg >> 4) & 0x01;
+		AMorPM = (tempReg >> 5) & 0x01;
+
+		rtc_time->hours = (tens * 10) + ones;
+	}
+	// 24-hour format
+	else {
+		ones = tempReg & 0x0F;
+		tens = (tempReg >> 4) & 0x03;
+
+		rtc_time->hours = (tens * 10) + ones;
+	}
+}
+
+void ds1307_set_current_date(RTC_date_t* rtc_date){
+	uint8_t tens, ones;
+	uint8_t tempReg = 0x00;
+
+	// Set day of the week
+	tempReg |= rtc_date->dayOfWeek;
+	ds1307_write(tempReg, DS1307_ADDR_DAY);
+	tempReg = 0x00;
+
+	// Set date of the month
+	ones = rtc_date->date % 10;
+	tens = rtc_date->date / 10;
+
+	tempReg |= ones;
+	tempReg |= (tens << 4);
+
+	ds1307_write(tempReg, DS1307_ADDR_DATE);
+	tempReg = 0x00;
+
+	// Set month
+	ones = rtc_date->month % 10;
+	tens = rtc_date->month / 10;
+
+	tempReg |= ones;
+	tempReg |= (tens << 4);
+
+	ds1307_write(tempReg, DS1307_ADDR_MONTH);
+	tempReg = 0x00;
+
+	// Set year
+	ones = (rtc_date->year - 2000) % 10;
+	tens = (rtc_date->year - 2000) / 10;
+
+	tempReg |= ones;
+	tempReg |= (tens << 4);
+
+	ds1307_write(tempReg, DS1307_ADDR_YEAR);
+}
+
+void ds1307_get_current_date(RTC_date_t* rtc_date){
+	uint8_t tens, ones;
+	uint8_t tempReg = 0x00;
+
+	// Get day of the week
+	tempReg = ds1307_read(DS1307_ADDR_DAY);
+	ones = tempReg;
+	rtc_date->dayOfWeek = ones;
+
+	// Get date of the month
+	tempReg = ds1307_read(DS1307_ADDR_DATE);
+	ones = tempReg & 0x0F;
+	tens = (tempReg >> 4) & 0x03;
+
+	rtc_date->date = (tens * 10) + ones;
+
+	// Get month
+	tempReg = ds1307_read(DS1307_ADDR_MONTH);
+	ones = tempReg & 0x0F;
+	tens = (tempReg >> 4) & 0x01;
+
+	rtc_date->month = (tens * 10) + ones;
+
+	// Get year
+	tempReg = ds1307_read(DS1307_ADDR_MONTH);
+	ones = tempReg & 0x0F;
+	tens = (tempReg >> 4) & 0x0F;
+
+	rtc_date->year = ((tens * 10) + ones) + 2000;
+}
+
+static void ds1307_i2c_pin_config(void){
+	GPIO_Handle_t i2c_sda, i2c_scl;
+
+	memset(&i2c_sda,0,sizeof(i2c_sda));
+	memset(&i2c_scl,0,sizeof(i2c_scl));
+
+	i2c_sda.pGPIOx = DS1307_I2C_GPIO_PORT;
+	i2c_sda.GPIO_PinConfig.GPIO_PinAltFunMode = 4;
+	i2c_sda.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALTFN;
+	i2c_sda.GPIO_PinConfig.GPIO_PinNumber = DS1307_I2C_SDA_PIN;
+	i2c_sda.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_OD;
+	i2c_sda.GPIO_PinConfig.GPIO_PinPuPdControl = DS1307_I2C_PUPD;
+	i2c_sda.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+
+	GPIO_Init(&i2c_sda);
+	GPIO_Init(&i2c_scl);
+}
+
+
+static void ds1307_i2c_config(void){
+	g_ds1307I2cHandle.pI2Cx = DS1307_I2C;
+	g_ds1307I2cHandle.I2C_Config.AckControl = I2C_ACK_ENABLE;
+	g_ds1307I2cHandle.I2C_Config.SCLSpeed = DS1307_I2C_SPEED;
+	I2C_Init(&g_ds1307I2cHandle);
+}
+
+static void ds1307_write(uint8_t value, uint8_t reg_address){
+	uint8_t tx[2];
+	tx[0] = reg_address;
+	tx[1] = value;
+
+	I2C_MasterSendData(&g_ds1307I2cHandle, tx, 2, DS1307_I2C_ADDRESS, 0);
+}
+
+static uint8_t ds1307_read(uint8_t regAddress){
+	uint8_t data;
+	// 1. Send word address to read from
+	I2C_MasterSendData(&g_ds1307I2cHandle, &regAddress, 1, DS1307_I2C_ADDRESS, 1);
+
+	// 2. Read data from that address
+	I2C_MasterReceiveData(&g_ds1307I2cHandle, &data, 1, DS1307_I2C_ADDRESS, 0);
+
+	return data;
+}

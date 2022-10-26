@@ -23,6 +23,7 @@ C_DEPS :=
 SUBDIRS := \
 Src \
 Startup \
-bsp \
+bsp/Inc \
+bsp/Src \
 drivers/Src \
 

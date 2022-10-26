@@ -1,0 +1,33 @@
+/*
+ * 012rtc_lcd.c
+ *
+ *  Created on: Oct 24, 2022
+ *      Author: egbra
+ */
+
+#include "stm32f407xx.h"
+#include "ds1307.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(void){
+	RTC_time_t rtc_time = { .seconds = 0,
+							.minutes = 0,
+							.hours = 0,
+							.time_format = TIME_FORMAT_12HRS };
+	RTC_date_t rtc_date = { .dayOfWeek = SUNDAY,
+							.date = 1,
+							.month = 1,
+							.year = 2000 };
+
+	printf("RTC Test:\n");
+
+	if(ds1307_init()){
+		printf("RTC Init has failed...\n");
+		while(1);
+	}
+
+	return 0;
+}
